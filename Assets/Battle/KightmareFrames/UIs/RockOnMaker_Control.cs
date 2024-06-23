@@ -54,7 +54,7 @@ public class RockOnMaker_Control : MonoBehaviour
     {
         if (target.GetComponent<Cpu_Control>() != null)
         {
-            if (target.GetComponent<Cpu_Control>().down_flag)
+            if (target.GetComponent<Cpu_Control>().isDown)
             {
                 transform.GetComponent<Image>().sprite = RockOnMaker_Yellow;
             }
@@ -65,7 +65,7 @@ public class RockOnMaker_Control : MonoBehaviour
         }
         else if (target.GetComponent<KMF_Control>() != null)
         {
-            if (target.GetComponent<KMF_Control>().down_flag)
+            if (target.GetComponent<KMF_Control>().isDown)
             {
                 transform.GetComponent<Image>().sprite = RockOnMaker_Yellow;
             }

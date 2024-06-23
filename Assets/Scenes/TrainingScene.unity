@@ -7687,7 +7687,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14aac99406da64b4f9510fb35379667e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  countdown_flag: 1
+  countisDown: 1
   countdown_se: {fileID: 8300000, guid: 523c9aa53a9cb2540a2ed9b24db54072, type: 3}
 --- !u!82 &1864986697
 AudioSource:

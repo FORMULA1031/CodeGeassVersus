@@ -236,7 +236,7 @@ MonoBehaviour:
   m_SynchronizeParameters:
   - Type: 4
     SynchronizeType: 0
-    Name: Boost_Flag
+    Name: isBoost
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0

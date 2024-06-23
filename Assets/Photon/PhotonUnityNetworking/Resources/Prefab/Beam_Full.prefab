@@ -4887,8 +4887,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 120
-  correctionfactor: 0
-  down_value: 6
+  correctionFactor: 0
+  downValue: 6
   speed: 500
   induction_x: 10
   induction_y: 10

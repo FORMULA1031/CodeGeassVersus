@@ -10013,23 +10013,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boost_amount: 0
-  mainshooting_currentreloadtime: 0
-  mainshooting_reloadtime: 3
-  subshooting_currentreloadtime: 0
-  subshooting_reloadtime: 2
-  specialshooting_currentreloadtime: 0
-  specialshooting_reloadtime: 5
-  fightingcharge_time: 0
-  fightingcharge_maxtime: 3
-  fightingcharge_currentreloadtime: 0
-  fightingcharge_reloadtime: 2
-  floatunit_currenttime: 0
-  floatunit_time: 30
-  fightingchargeinput_flag: 0
-  floatunit_flag: 0
-  inductionoff_flag: 0
-  down_flag: 0
-  type_groundrunnig: 1
+  mainShootingCurrentReloadTime: 0
+  mainShootingReloadTime: 3
+  subShootingCurrentReloadTime: 0
+  subShootingReloadTime: 2
+  specialShootingCurrentReloadTime: 0
+  specialShootingReloadTime: 5
+  fightingChargeTime: 0
+  fightingChargeMaxTime: 3
+  fightingChargeCurrentReloadTime: 0
+  fightingChargeReloadTime: 2
+  floatUnitCurrentTime: 0
+  floatUnitTime: 30
+  isFightingChargeInput: 0
+  isFloatUnit: 0
+  isInductionOff: 0
+  isDown: 0
+  isTypeGroundRunning: 1
   durable_value: 300
   durable_maxvalue: 300
   mainshooting_number: 8
@@ -11398,8 +11398,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 100
-  correctionfactor: 0.2
-  down_value: 6
+  correctionFactor: 0.2
+  downValue: 6
   speed: 0
   induction_x: 0
   induction_y: 0
@@ -12152,8 +12152,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 70
-  correctionfactor: 0.15
-  down_value: 0.3
+  correctionFactor: 0.15
+  downValue: 0.3
   speed: 0
   induction_x: 0
   induction_y: 0
@@ -12484,8 +12484,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 65
-  correctionfactor: 0.2
-  down_value: 1.7
+  correctionFactor: 0.2
+  downValue: 1.7
   speed: 0
   induction_x: 0
   induction_y: 0
