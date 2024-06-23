@@ -9,6 +9,7 @@ public class Setting_Control : MonoBehaviour
     public GameObject[] ActionPanels;
     int currentnumber = 0;
     bool moved_flag = false;
+    bool close_flag = false;
 
     // Start is called before the first frame update
     void Start()
@@ -97,17 +98,25 @@ public class Setting_Control : MonoBehaviour
     {
         if (Input.GetButtonDown("SubShooting"))
         {
-            if (ActionPanels[currentnumber].GetComponent<RebindUI>() != null)
+            if (close_flag)
             {
-                if (!ActionPanels[currentnumber].GetComponent<RebindUI>().rebinding_flag)
+                if (ActionPanels[currentnumber].GetComponent<RebindUI>() != null)
                 {
-                    ActionPanels[currentnumber].GetComponent<RebindUI>().StartRebinding();
+                    if (!ActionPanels[currentnumber].GetComponent<RebindUI>().rebinding_flag)
+                    {
+                        ActionPanels[currentnumber].GetComponent<RebindUI>().StartRebinding();
+                    }
+                }
+                else
+                {
+                    StartDisplay_Control.CloseKeyConfigPanel();
+                    close_flag = false;
                 }
             }
-            else
-            {
-                StartDisplay_Control.CloseKeyConfigPanel();
-            }
+        }
+        else if (Input.GetButtonUp("SubShooting"))
+        {
+            close_flag = true;
         }
     }
 }

@@ -169,9 +169,9 @@ public class KMF_Control : MonoBehaviour
         Eff_StepLine.SetActive(false);
         EffDust_R.GetComponent<ParticleSystem>().Stop();
         EffDust_L.GetComponent<ParticleSystem>().Stop();
-        if(SceneManager.GetActiveScene().name == "TrainingScene")
+        if(SceneManager.GetActiveScene().name == "TrainingScene" || pv.IsMine)
         {
-
+            GetComponent<PlayerInput>().enabled = true;
         }
         else if(!pv.IsMine)
         {
@@ -1733,114 +1733,132 @@ public class KMF_Control : MonoBehaviour
     
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
+        if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
         {
-            if (!isIncapableAction)
+            if (pv.IsMine || SceneManager.GetActiveScene().name == "TrainingScene")
             {
-                isJumpKeyPressing = true;
-                //�W�����v
-                if (!isJump)
+                if (context.phase == InputActionPhase.Performed)
                 {
-                    BoostFinish();
-                    isJump = true;
-                    jumpRugTime = 0;
-                    isBoost = false;
-                    boostButtonTime = 0;
-                    isJumpMove = true;
-                    isStepJump = false;
-                }
-                //�u�[�X�g
-                else if (isJump)
-                {
-                    boostButtonTime += Time.deltaTime;
-                    if (boostButtonTime < 0.2f)
+                    if (!isIncapableAction)
                     {
-                        isBoost = true;
-                        isJump = false;
-                        isRise = false;
-                        anim.SetBool("Boost_Landing", true);
-                        anim.SetBool("SubShooting_Start", false);
-                        anim.SetBool("SpecialShooting_Start", false);
-                        anim.SetBool("Boost_Landing_Finish", false);
-                        isSlide = false;
-                        slideTime = 0;
-                        MainShootingFinish();
-                        SubShootingFinish();
-                        SubShootingFightingVariantsFinish();
-                        SpecialShootingFinish();
-                        AttackFinish();
-                        SpecialAttackFinish();
-                        StepFinish();
-                        ReplacementFinish();
-                        boost_amount -= 15;
-                        boostConsumedTime = 0;
-                        gameObject.transform.Find("Lancelot/Rig 1").GetComponent<Rig>().weight = 0;
-                        Eff_SpeedLine.SetActive(true);
-                        KMF_RapidRotation();
-                        if (!isTypeGroundRunning)
+                        isJumpKeyPressing = true;
+                        //�W�����v
+                        if (!isJump)
                         {
-                            transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
+                            BoostFinish();
+                            isJump = true;
+                            jumpRugTime = 0;
+                            isBoost = false;
+                            boostButtonTime = 0;
+                            isJumpMove = true;
+                            isStepJump = false;
                         }
-                        else if (!isAir)
+                        //�u�[�X�g
+                        else if (isJump)
                         {
-                            if (SceneManager.GetActiveScene().name == "TrainingScene")
+                            boostButtonTime += Time.deltaTime;
+                            if (boostButtonTime < 0.2f)
                             {
-                                RpcEffDustPlay_Control();
+                                isBoost = true;
+                                isJump = false;
+                                isRise = false;
+                                anim.SetBool("Boost_Landing", true);
+                                anim.SetBool("SubShooting_Start", false);
+                                anim.SetBool("SpecialShooting_Start", false);
+                                anim.SetBool("Boost_Landing_Finish", false);
+                                isSlide = false;
+                                slideTime = 0;
+                                MainShootingFinish();
+                                SubShootingFinish();
+                                SubShootingFightingVariantsFinish();
+                                SpecialShootingFinish();
+                                AttackFinish();
+                                SpecialAttackFinish();
+                                StepFinish();
+                                ReplacementFinish();
+                                boost_amount -= 15;
+                                boostConsumedTime = 0;
+                                gameObject.transform.Find("Lancelot/Rig 1").GetComponent<Rig>().weight = 0;
+                                Eff_SpeedLine.SetActive(true);
+                                KMF_RapidRotation();
+                                if (!isTypeGroundRunning)
+                                {
+                                    transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
+                                }
+                                else if (!isAir)
+                                {
+                                    if (SceneManager.GetActiveScene().name == "TrainingScene")
+                                    {
+                                        RpcEffDustPlay_Control();
+                                    }
+                                    else
+                                    {
+                                        pv.RPC(nameof(RpcEffDustPlay_Control), RpcTarget.AllBufferedViaServer);
+                                    }
+                                    //EffDust_R.GetComponent<ParticleSystem>().Play();
+                                    //EffDust_L.GetComponent<ParticleSystem>().Play();
+                                }
                             }
-                            else
-                            {
-                                pv.RPC(nameof(RpcEffDustPlay_Control), RpcTarget.AllBufferedViaServer);
-                            }
-                            //EffDust_R.GetComponent<ParticleSystem>().Play();
-                            //EffDust_L.GetComponent<ParticleSystem>().Play();
                         }
                     }
                 }
             }
-        }        
+        }
     }
     public void OffJump(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
+        if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
         {
-            isJumpKeyPressing = false;
+            if (pv.IsMine || SceneManager.GetActiveScene().name == "TrainingScene")
+            {
+                if (context.phase == InputActionPhase.Performed)
+                {
+                    isJumpKeyPressing = false;
+                }
+            }
         }
     }
 
     public void OnMainShoot(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
+        if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
         {
-            if (!isIncapableAction && (!isUnderAttack || lastmove_name == "subshooting"))
+            if (pv.IsMine || SceneManager.GetActiveScene().name == "TrainingScene")
             {
-                if (!isMainShooting)
+                if (context.phase == InputActionPhase.Performed)
                 {
-                    if (mainshooting_number >= 1 && !isLanding)
+                    if (!isIncapableAction && (!isUnderAttack || lastmove_name == "subshooting"))
                     {
-                        isMainShooting = true;
-                        anim.SetBool("MainShooting", true);
-                        isMainShootingFiring = false;
-                        mainShootingTime = 0;
-                        isUnderAttack = true;
-                        Varis_Normal.SetActive(true);
-                        Varis_FullPower.SetActive(false);
-                        if (LockOnEnemy != null)
+                        if (!isMainShooting)
                         {
-                            gameObject.transform.Find("Lancelot/Rig 1").GetComponent<Rig>().weight = 1;
-                        }
-                        if (lastmove_name == "subshooting")
-                        {
-                            anim.SetBool("SubShooting_Start", false);
-                            SubShootingFinish();
-                        }
-                        lastmove_name = "mainshooting";
-                        //�U���������
-                        if (Mathf.Abs(Mathf.Abs(Mathf.Repeat(transform.localEulerAngles.y + 180, 360) - 180) - Mathf.Abs(Mathf.Repeat(MainCamera.transform.localEulerAngles.y + 180, 360) - 180)) >= 100f)
-                        {
-                            if (LockOnEnemy != null)
+                            if (mainshooting_number >= 1 && !isLanding)
                             {
-                                isStiffness = true;
-                                gameObject.transform.LookAt(LockOnEnemy.transform);
+                                isMainShooting = true;
+                                anim.SetBool("MainShooting", true);
+                                isMainShootingFiring = false;
+                                mainShootingTime = 0;
+                                isUnderAttack = true;
+                                Varis_Normal.SetActive(true);
+                                Varis_FullPower.SetActive(false);
+                                if (LockOnEnemy != null)
+                                {
+                                    gameObject.transform.Find("Lancelot/Rig 1").GetComponent<Rig>().weight = 1;
+                                }
+                                if (lastmove_name == "subshooting")
+                                {
+                                    anim.SetBool("SubShooting_Start", false);
+                                    SubShootingFinish();
+                                }
+                                lastmove_name = "mainshooting";
+                                //�U���������
+                                if (Mathf.Abs(Mathf.Abs(Mathf.Repeat(transform.localEulerAngles.y + 180, 360) - 180) - Mathf.Abs(Mathf.Repeat(MainCamera.transform.localEulerAngles.y + 180, 360) - 180)) >= 100f)
+                                {
+                                    if (LockOnEnemy != null)
+                                    {
+                                        isStiffness = true;
+                                        gameObject.transform.LookAt(LockOnEnemy.transform);
+                                    }
+                                }
                             }
                         }
                     }
@@ -1850,32 +1868,38 @@ public class KMF_Control : MonoBehaviour
     }
     public void OnSubShoot(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
+        if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
         {
-            if (!isIncapableAction && !isUnderAttack)
+            if (pv.IsMine || SceneManager.GetActiveScene().name == "TrainingScene")
             {
-                if (!isSubShooting)
+                if (context.phase == InputActionPhase.Performed)
                 {
-                    if (subshooting_number >= 1 && !isLanding)
+                    if (!isIncapableAction && !isUnderAttack)
                     {
-                        StepFinish();
-                        anim.SetBool("SubShooting_Start", true);
-                        isSubShooting = true;
-                        isSubShootingFiring = false;
-                        subShootingTime = 0;
-                        isStiffness = true;
-                        isUnderAttack = true;
-                        Varis_Normal.SetActive(true);
-                        Varis_FullPower.SetActive(false);
-
-                        isBoost = false;
-                        anim.SetBool("Boost_Landing", false);
-                        if (isInduction && LockOnEnemy != null)
+                        if (!isSubShooting)
                         {
-                            gameObject.transform.LookAt(LockOnEnemy.transform);
+                            if (subshooting_number >= 1 && !isLanding)
+                            {
+                                StepFinish();
+                                anim.SetBool("SubShooting_Start", true);
+                                isSubShooting = true;
+                                isSubShootingFiring = false;
+                                subShootingTime = 0;
+                                isStiffness = true;
+                                isUnderAttack = true;
+                                Varis_Normal.SetActive(true);
+                                Varis_FullPower.SetActive(false);
+
+                                isBoost = false;
+                                anim.SetBool("Boost_Landing", false);
+                                if (isInduction && LockOnEnemy != null)
+                                {
+                                    gameObject.transform.LookAt(LockOnEnemy.transform);
+                                }
+                                lastmove_name = "subshooting_start";
+                                transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
+                            }
                         }
-                        lastmove_name = "subshooting_start";
-                        transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
                     }
                 }
             }
@@ -1883,38 +1907,44 @@ public class KMF_Control : MonoBehaviour
     }
     public void OnSpecialShoot(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
+        if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
         {
-            if (!isIncapableAction
-            && (!isUnderAttack || lastmove_name == "mainshooting" || lastmove_name == "specialattack"))
+            if (pv.IsMine || SceneManager.GetActiveScene().name == "TrainingScene")
             {
-                if (Input.GetButtonDown("SpecialShooting") && !isSpecialShooting)
+                if (context.phase == InputActionPhase.Performed)
                 {
-                    if (specialshooting_number >= 1 && !isLanding)
+                    if (!isIncapableAction
+                    && (!isUnderAttack || lastmove_name == "mainshooting" || lastmove_name == "specialattack"))
                     {
-                        StepFinish();
-                        MainShootingFinish();
-                        SpecialAttackFinish();
-                        anim.SetBool("SpecialShooting", true);
-                        anim.SetBool("SpecialShooting_Start", true);
-                        isSpecialShooting = true;
-                        isSpecialShootingFiring = false;
-                        specialShootingTime = 0;
-                        isSpecialShootingAnimation = true;
-                        isStiffness = true;
-                        isUnderAttack = true;
-                        Varis_Normal.SetActive(false);
-                        Varis_FullPower.SetActive(true);
-
-                        isBoost = false;
-                        anim.SetBool("Boost_Landing", false);
-
-                        if (isInduction && LockOnEnemy != null)
+                        if (Input.GetButtonDown("SpecialShooting") && !isSpecialShooting)
                         {
-                            gameObject.transform.LookAt(LockOnEnemy.transform);
+                            if (specialshooting_number >= 1 && !isLanding)
+                            {
+                                StepFinish();
+                                MainShootingFinish();
+                                SpecialAttackFinish();
+                                anim.SetBool("SpecialShooting", true);
+                                anim.SetBool("SpecialShooting_Start", true);
+                                isSpecialShooting = true;
+                                isSpecialShootingFiring = false;
+                                specialShootingTime = 0;
+                                isSpecialShootingAnimation = true;
+                                isStiffness = true;
+                                isUnderAttack = true;
+                                Varis_Normal.SetActive(false);
+                                Varis_FullPower.SetActive(true);
+
+                                isBoost = false;
+                                anim.SetBool("Boost_Landing", false);
+
+                                if (isInduction && LockOnEnemy != null)
+                                {
+                                    gameObject.transform.LookAt(LockOnEnemy.transform);
+                                }
+                                lastmove_name = "specialshooting";
+                                transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
+                            }
                         }
-                        lastmove_name = "specialshooting";
-                        transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
                     }
                 }
             }
@@ -1922,97 +1952,103 @@ public class KMF_Control : MonoBehaviour
     }
     public void OnFight(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
+        if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
         {
-            Vector3 attack_direction;
-
-            if (!isIncapableAction)
+            if (pv.IsMine || SceneManager.GetActiveScene().name == "TrainingScene")
             {
-                if (!isLanding || isUnderAttack)
+                if (context.phase == InputActionPhase.Performed)
                 {
-                    if (!isAttack && !isAttack1 && (!isUnderAttack || lastmove_name == "specialattack"))
-                    {
-                        StepFinish();
-                        SpecialAttackFinish();
-                        anim.SetBool("Attack_Induction", true);
-                        isAttack = true;
-                        isStiffness = true;
-                        isUnderAttack = true;
-                        attackTime = 0;
-                        attackFinishTime = 1.8f;
-                        Varis_Normal.SetActive(false);
-                        Varis_FullPower.SetActive(false);
-                        MVS_R.SetActive(true);
-                        MVS_L.SetActive(true);
-                        MVSSheathing_R.SetActive(false);
-                        MVSSheathing_L.SetActive(false);
-                        Eff_SpeedLine.SetActive(true);
-                        MVS_R.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
-                        MVS_L.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
+                    Vector3 attack_direction;
 
-                        isBoost = false;
-                        anim.SetBool("Boost_Landing", false);
-                        lastmove_name = "attack";
-                        transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
-                    }
-                    else if (isAttack && isAttack1 && !isAttack2
-                        && anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|Attack_01"))
+                    if (!isIncapableAction)
                     {
-                        anim.SetBool("Attack1", false);
-                        anim.SetBool("Attack2", true);
-                        isAttack2 = true;
-                        attackTime = 0;
-                        attackFinishTime = 1.0f;
-                        MVS_R.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
-                        MVS_L.transform.Find("MVS").GetComponent<BoxCollider>().enabled = true;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().power = 70;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().correctionFactor = 0.15f;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().downValue = 0.3f;
-                    }
-                    else if (isAttack2
-                        && anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|Attack_02"))
-                    {
-                        anim.SetBool("Attack1", false);
-                        anim.SetBool("Attack2", false);
-                        anim.SetBool("Attack3", true);
-                        isAttack3 = true;
-                        isAttack2 = false;
-                        attackTime = 0;
-                        attackFinishTime = 1.0f;
-                        MVS_R.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
-                        MVS_L.transform.Find("MVS").GetComponent<BoxCollider>().enabled = true;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().power = 80;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().correctionFactor = 0.12f;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().downValue = 6;
-                    }
-
-                    //�T�u�ˌ��i���h��
-                    if (lastmove_name == "subshooting" && isSubShooting && !isSubShootingFightingVariants)
-                    {
-                        SubShootingFinish();
-                        anim.SetBool("SubShooting_FightingVariants", true);
-                        anim.SetBool("SubShooting_Start", false);
-                        isSubShootingFightingVariants = true;
-                        isStiffness = true;
-                        isUnderAttack = true;
-                        rb.useGravity = false;
-                        subShootingFightingVariantsTime = 0;
-                        Varis_Normal.SetActive(false);
-                        Varis_FullPower.SetActive(false);
-                        Leg_R.transform.GetComponent<BoxCollider>().enabled = true;
-
-                        isBoost = false;
-                        anim.SetBool("Boost_Landing", false);
-
-                        if (isInduction && LockOnEnemy != null)
+                        if (!isLanding || isUnderAttack)
                         {
-                            gameObject.transform.LookAt(LockOnEnemy.transform);
+                            if (!isAttack && !isAttack1 && (!isUnderAttack || lastmove_name == "specialattack"))
+                            {
+                                StepFinish();
+                                SpecialAttackFinish();
+                                anim.SetBool("Attack_Induction", true);
+                                isAttack = true;
+                                isStiffness = true;
+                                isUnderAttack = true;
+                                attackTime = 0;
+                                attackFinishTime = 1.8f;
+                                Varis_Normal.SetActive(false);
+                                Varis_FullPower.SetActive(false);
+                                MVS_R.SetActive(true);
+                                MVS_L.SetActive(true);
+                                MVSSheathing_R.SetActive(false);
+                                MVSSheathing_L.SetActive(false);
+                                Eff_SpeedLine.SetActive(true);
+                                MVS_R.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
+                                MVS_L.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
+
+                                isBoost = false;
+                                anim.SetBool("Boost_Landing", false);
+                                lastmove_name = "attack";
+                                transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
+                            }
+                            else if (isAttack && isAttack1 && !isAttack2
+                                && anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|Attack_01"))
+                            {
+                                anim.SetBool("Attack1", false);
+                                anim.SetBool("Attack2", true);
+                                isAttack2 = true;
+                                attackTime = 0;
+                                attackFinishTime = 1.0f;
+                                MVS_R.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
+                                MVS_L.transform.Find("MVS").GetComponent<BoxCollider>().enabled = true;
+                                MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().power = 70;
+                                MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().correctionFactor = 0.15f;
+                                MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().downValue = 0.3f;
+                            }
+                            else if (isAttack2
+                                && anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|Attack_02"))
+                            {
+                                anim.SetBool("Attack1", false);
+                                anim.SetBool("Attack2", false);
+                                anim.SetBool("Attack3", true);
+                                isAttack3 = true;
+                                isAttack2 = false;
+                                attackTime = 0;
+                                attackFinishTime = 1.0f;
+                                MVS_R.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
+                                MVS_L.transform.Find("MVS").GetComponent<BoxCollider>().enabled = true;
+                                MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().power = 80;
+                                MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().correctionFactor = 0.12f;
+                                MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().downValue = 6;
+                            }
+
+                            //�T�u�ˌ��i���h��
+                            if (lastmove_name == "subshooting" && isSubShooting && !isSubShootingFightingVariants)
+                            {
+                                SubShootingFinish();
+                                anim.SetBool("SubShooting_FightingVariants", true);
+                                anim.SetBool("SubShooting_Start", false);
+                                isSubShootingFightingVariants = true;
+                                isStiffness = true;
+                                isUnderAttack = true;
+                                rb.useGravity = false;
+                                subShootingFightingVariantsTime = 0;
+                                Varis_Normal.SetActive(false);
+                                Varis_FullPower.SetActive(false);
+                                Leg_R.transform.GetComponent<BoxCollider>().enabled = true;
+
+                                isBoost = false;
+                                anim.SetBool("Boost_Landing", false);
+
+                                if (isInduction && LockOnEnemy != null)
+                                {
+                                    gameObject.transform.LookAt(LockOnEnemy.transform);
+                                }
+                                transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
+                                lastmove_name = "subshooting_fightingvariants";
+                                attack_direction = gameObject.transform.forward * 1;
+                                attack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
+                                attack_moving = attack_direction * BOOST_SPEED;
+                            }
                         }
-                        transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
-                        lastmove_name = "subshooting_fightingvariants";
-                        attack_direction = gameObject.transform.forward * 1;
-                        attack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-                        attack_moving = attack_direction * BOOST_SPEED;
                     }
                 }
             }
@@ -2020,34 +2056,40 @@ public class KMF_Control : MonoBehaviour
     }
     public void OnSpecialFight(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
+        if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
         {
-            Vector3 specialattack_direction;
-            if (!isIncapableAction && !isUnderAttack)
+            if (pv.IsMine || SceneManager.GetActiveScene().name == "TrainingScene")
             {
-                if (!isLanding)
+                if (context.phase == InputActionPhase.Performed)
                 {
-                    StepFinish();
-                    anim.SetBool("SpecialAttack", true);
-                    isSpecialAttack = true;
-                    specialAttackTime = 0;
-                    boost_amount -= 10;
-                    isStiffness = true;
-                    isUnderAttack = true;
-                    Varis_Normal.SetActive(false);
-                    Varis_FullPower.SetActive(false);
-
-                    isBoost = false;
-                    anim.SetBool("Boost_Landing", false);
-
-                    if (isInduction && LockOnEnemy != null)
+                    Vector3 specialattack_direction;
+                    if (!isIncapableAction && !isUnderAttack)
                     {
-                        gameObject.transform.LookAt(LockOnEnemy.transform);
+                        if (!isLanding)
+                        {
+                            StepFinish();
+                            anim.SetBool("SpecialAttack", true);
+                            isSpecialAttack = true;
+                            specialAttackTime = 0;
+                            boost_amount -= 10;
+                            isStiffness = true;
+                            isUnderAttack = true;
+                            Varis_Normal.SetActive(false);
+                            Varis_FullPower.SetActive(false);
+
+                            isBoost = false;
+                            anim.SetBool("Boost_Landing", false);
+
+                            if (isInduction && LockOnEnemy != null)
+                            {
+                                gameObject.transform.LookAt(LockOnEnemy.transform);
+                            }
+                            lastmove_name = "specialattack";
+                            specialattack_direction = gameObject.transform.forward * 1;
+                            specialattack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
+                            specialattack_moving = specialattack_direction * BOOST_SPEED * 1.2f;
+                        }
                     }
-                    lastmove_name = "specialattack";
-                    specialattack_direction = gameObject.transform.forward * 1;
-                    specialattack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-                    specialattack_moving = specialattack_direction * BOOST_SPEED * 1.2f;
                 }
             }
         }

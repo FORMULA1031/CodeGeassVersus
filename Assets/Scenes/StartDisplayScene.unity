@@ -4765,7 +4765,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Square
+  m_Text: 'Triangle
+
+'
 --- !u!222 &1598669533
 CanvasRenderer:
   m_ObjectHideFlags: 0

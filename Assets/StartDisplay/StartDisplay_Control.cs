@@ -77,7 +77,6 @@ public class StartDisplay_Control : MonoBehaviour
                             KeyConfigPanel.transform.localScale = new Vector3(KeyConfigPanel.transform.localScale.x, 1f, KeyConfigPanel.transform.localScale.z);
                             AudioSource.PlayOneShot(selected_se);
                             selected_setting = true;
-                            Debug.Log("fasfadfda");
                             keyconfigpanelopen_flag = false;
                         }
                         break;
@@ -89,7 +88,7 @@ public class StartDisplay_Control : MonoBehaviour
                 AudioSource.PlayOneShot(showpanel_se);
             }
         }
-        if (Input.GetButtonUp("SubShooting"))
+        else if (Input.GetButtonUp("SubShooting"))
         {
             keyconfigpanelopen_flag = true;
         }
@@ -226,7 +225,6 @@ public class StartDisplay_Control : MonoBehaviour
         KeyConfigPanel.transform.localScale = new Vector3(KeyConfigPanel.transform.localScale.x, 0f, KeyConfigPanel.transform.localScale.z);
         AudioSource.PlayOneShot(selected_se);
         selected_setting = false;
-        NetworkManager.LeaveRoom();
         keyconfigpanelopen_flag = false;
     }
 }
