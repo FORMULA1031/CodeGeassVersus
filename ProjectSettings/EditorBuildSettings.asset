@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/StartDisplayScene.unity
+    guid: 612f231388b9ee440a07112febb1e669
+  - enabled: 1
+    path: Assets/Scenes/AircraftSelectionScene.unity
+    guid: 6e20e65cffcde9c40b5d01f0788ea525
+  - enabled: 1
+    path: Assets/Scenes/TrainingScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/OneOnOneScene.unity
+    guid: 87936ac7ee913a144a5281ceb6f22168
+  m_configObjects: {}
