@@ -13,7 +13,7 @@ public class Cpu_Control : MonoBehaviour
     float jump_power = 50;
     float jumprug_time = 0;
     float landing_time = 0;
-    float boostbutton_time = 0;
+    float BoostButtonTime = 0;
     float boostconsumed_time = 0;
     float slide_time = 0;
     float mainshooting_time = 0;
@@ -295,7 +295,7 @@ public class Cpu_Control : MonoBehaviour
         }
     }
 
-    //ƒŒƒo[§Œä
+    //ï¿½ï¿½ï¿½oï¿½[ï¿½ï¿½ï¿½ï¿½
     void MoveKeyControls()
     {
         movingdirection =  new Vector3(x, rb.velocity.y, z);
@@ -309,7 +309,7 @@ public class Cpu_Control : MonoBehaviour
             leverinsert_flag = false;
             anim.SetBool("Walk", false);
         }
-        movingdirection.Normalize();//Î‚ß‚Ì‹——£‚ª’·‚­‚È‚é‚Ì‚ğ–h‚¬‚Ü‚·
+        movingdirection.Normalize();//ï¿½Î‚ß‚Ì‹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Ì‚ï¿½hï¿½ï¿½ï¿½Ü‚ï¿½
         if (!boost_flag && !slide_flag)
         {
             if (!air_flag)
@@ -323,7 +323,7 @@ public class Cpu_Control : MonoBehaviour
     {
         if (leverinsert_flag)
         {
-            Vector3 direction = new Vector3 (0, 0); //Œü‚«‚ğ•ÏX‚·‚é
+            Vector3 direction = new Vector3 (0, 0); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏXï¿½ï¿½ï¿½ï¿½
             if (x > 0)
             {
                 direction = new Vector3(0, 90, 0);
@@ -364,20 +364,20 @@ public class Cpu_Control : MonoBehaviour
     {
         if (!incapableofaction_flag)
         {
-            //ƒWƒƒƒ“ƒv
+            //ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½v
             if (cpu_jump && !jump_flag)
             {
                 BoostFinish();
                 jump_flag = true;
                 jumprug_time = 0;
                 boost_flag = false;
-                boostbutton_time = 0;
+                BoostButtonTime = 0;
             }
-            //ƒu[ƒXƒg
+            //ï¿½uï¿½[ï¿½Xï¿½g
             else if (cpu_boost && jump_flag)
             {
-                boostbutton_time += Time.deltaTime;
-                if (boostbutton_time < 0.2f)
+                BoostButtonTime += Time.deltaTime;
+                if (BoostButtonTime < 0.2f)
                 {
                     boost_flag = true;
                     jump_flag = false;
@@ -400,7 +400,7 @@ public class Cpu_Control : MonoBehaviour
                 }
             }
 
-            //ƒWƒƒƒ“ƒvˆ—
+            //ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½
             if (jump_flag && !boost_flag)
             {
                 if (!stiffness_flag)
@@ -426,7 +426,7 @@ public class Cpu_Control : MonoBehaviour
                             Vector3 jump_moving;
 
                             jump_direction = gameObject.transform.up * 1;
-                            jump_direction.Normalize();//Î‚ß‚Ì‹——£‚ª’·‚­‚È‚é‚Ì‚ğ–h‚¬‚Ü‚·
+                            jump_direction.Normalize();//ï¿½Î‚ß‚Ì‹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Ì‚ï¿½hï¿½ï¿½ï¿½Ü‚ï¿½
                             jump_moving = jump_direction * jump_power;
                             rb.velocity = new Vector3(rb.velocity.x, jump_moving.y, rb.velocity.z);
                         }
@@ -453,7 +453,7 @@ public class Cpu_Control : MonoBehaviour
                 anim.SetBool("Jump", false);
             }
 
-            //ƒu[ƒXƒg’†
+            //ï¿½uï¿½[ï¿½Xï¿½gï¿½ï¿½
             if (boost_flag)
             {
                 if (movingdirection != new Vector3(0, 0, 0) && leverinsert_flag)
@@ -477,7 +477,7 @@ public class Cpu_Control : MonoBehaviour
             }
         }
 
-        //ƒu[ƒXƒgI—¹
+        //ï¿½uï¿½[ï¿½Xï¿½gï¿½Iï¿½ï¿½
         if ((!leverinsert_flag && !cpu_boost) || incapableofaction_flag)
         {
             if (boost_flag)
@@ -495,7 +495,7 @@ public class Cpu_Control : MonoBehaviour
             }
         }
 
-        //ƒYƒTŠÔ
+        //ï¿½Yï¿½Tï¿½ï¿½ï¿½ï¿½
         if (slide_flag)
         {
             anim.SetBool("Boost_Landing_Finish", true);
@@ -507,7 +507,7 @@ public class Cpu_Control : MonoBehaviour
         }
     }
 
-    //ƒu[ƒXƒgI—¹
+    //ï¿½uï¿½[ï¿½Xï¿½gï¿½Iï¿½ï¿½
     void BoostFinish()
     {
         boost_flag = false;
@@ -515,7 +515,7 @@ public class Cpu_Control : MonoBehaviour
         anim.SetBool("Boost_Landing", false);
     }
 
-    //ƒYƒTI—¹
+    //ï¿½Yï¿½Tï¿½Iï¿½ï¿½
     void SlideFinish()
     {
         anim.SetBool("Boost_Landing_Finish", false);
@@ -527,7 +527,7 @@ public class Cpu_Control : MonoBehaviour
         underattack_flag = false;
     }
 
-    //’…’n§Œä
+    //ï¿½ï¿½ï¿½nï¿½ï¿½ï¿½ï¿½
     void LandingTime()
     {
         if (landing_flag && !underattack_flag)
@@ -551,7 +551,7 @@ public class Cpu_Control : MonoBehaviour
         gameObject.transform.Find(rig_name).gameObject.transform.GetComponent<MultiAimConstraint>().data.sourceObjects = sourceobject;
     }
 
-    //ËŒ‚ƒ{ƒ^ƒ“§Œä
+    //ï¿½ËŒï¿½ï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void ShootingKeyControls()
     {
         if (!incapableofaction_flag && (!underattack_flag || lastmove_name == "subshooting"))
@@ -581,7 +581,7 @@ public class Cpu_Control : MonoBehaviour
                     Vector3 myback = transform.forward * -1.1f;
                     if (LockOnEnemy != null)
                     {
-                        //U‚èŒü‚«Œ‚‚¿
+                        //ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                         if (Mathf.Abs(Vector3.Distance(LockOnEnemy.transform.position, myforward))
                             > Mathf.Abs(Vector3.Distance(LockOnEnemy.transform.position, myback)))
                         {
@@ -593,7 +593,7 @@ public class Cpu_Control : MonoBehaviour
             }
         }
 
-        //ƒƒCƒ“ËŒ‚’†
+        //ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½ËŒï¿½ï¿½ï¿½
         if (mainshooting_flag)
         {
             mainshooting_time += Time.deltaTime;
@@ -616,7 +616,7 @@ public class Cpu_Control : MonoBehaviour
             }
         }
 
-        //ƒŠƒ[ƒh
+        //ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½h
         if (mainshooting_maxnumber > mainshooting_number)
         {
             mainshooting_reloadtime += Time.deltaTime;
@@ -636,7 +636,7 @@ public class Cpu_Control : MonoBehaviour
         gameObject.transform.Find("Lancelot/Rig 1").GetComponent<Rig>().weight = 0;
     }
 
-    //ƒTƒuËŒ‚§Œä
+    //ï¿½Tï¿½uï¿½ËŒï¿½ï¿½ï¿½ï¿½ï¿½
     void SubShootingControls()
     {
         if (!incapableofaction_flag && !underattack_flag)
@@ -674,9 +674,9 @@ public class Cpu_Control : MonoBehaviour
                 subshootingfiring_flag = true;
                 SlashHarken_Instance = Instantiate(SlashHarken, Lancelot_ShashHarken.transform.position, Lancelot_ShashHarken.transform.rotation);
                 Vector3 SlashHarkenAngle = SlashHarken_Instance.transform.eulerAngles;
-                SlashHarkenAngle.y -= 180.0f; // ƒ[ƒ‹ƒhÀ•W‚ğŠî€‚ÉAy²‚ğ²‚É‚µ‚½‰ñ“]‚ğ10“x‚É•ÏX
-                SlashHarkenAngle.z += 90.0f; // ƒ[ƒ‹ƒhÀ•W‚ğŠî€‚ÉAz²‚ğ²‚É‚µ‚½‰ñ“]‚ğ10“x‚É•ÏX
-                SlashHarken_Instance.transform.eulerAngles = SlashHarkenAngle; // ‰ñ“]Šp“x‚ğİ’è
+                SlashHarkenAngle.y -= 180.0f; // ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½î€ï¿½ÉAyï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½ï¿½ï¿½]ï¿½ï¿½10ï¿½xï¿½É•ÏX
+                SlashHarkenAngle.z += 90.0f; // ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½î€ï¿½ÉAzï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½ï¿½ï¿½]ï¿½ï¿½10ï¿½xï¿½É•ÏX
+                SlashHarken_Instance.transform.eulerAngles = SlashHarkenAngle; // ï¿½ï¿½]ï¿½pï¿½xï¿½ï¿½İ’ï¿½
                 if (LockOnEnemy != null)
                 {
                     SlashHarken_Instance.GetComponent<Beam_Control>().LockOnEnemySetting(gameObject, LockOnEnemy);
@@ -699,7 +699,7 @@ public class Cpu_Control : MonoBehaviour
             }
         }
 
-        //ƒŠƒ[ƒh
+        //ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½h
         if (subshooting_maxnumber > subshooting_number)
         {
             subshooting_reloadtime += Time.deltaTime;
@@ -720,7 +720,7 @@ public class Cpu_Control : MonoBehaviour
         Destroy(SlashHarken_Instance);
     }
 
-    //“ÁêËŒ‚ƒ{ƒ^ƒ“§Œä
+    //ï¿½ï¿½ï¿½ï¿½ËŒï¿½ï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void SpecialShootingControls()
     {
         if (!incapableofaction_flag
@@ -760,7 +760,7 @@ public class Cpu_Control : MonoBehaviour
             }
         }
 
-        //“ÁêËŒ‚’†
+        //ï¿½ï¿½ï¿½ï¿½ËŒï¿½ï¿½ï¿½
         if (specialshooting_flag)
         {
             specialshooting_time += Time.deltaTime;
@@ -784,7 +784,7 @@ public class Cpu_Control : MonoBehaviour
             }
         }
 
-        //ƒŠƒ[ƒh
+        //ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½h
         if (specialshooting_number == 0)
         {
             specialshooting_reloadtime += Time.deltaTime;
@@ -807,7 +807,7 @@ public class Cpu_Control : MonoBehaviour
         gameObject.transform.eulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
     }
 
-    //Ši“¬ƒ{ƒ^ƒ“§Œä
+    //ï¿½iï¿½ï¿½ï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void AttackControls()
     {
         Vector3 attack_direction;
@@ -872,7 +872,7 @@ public class Cpu_Control : MonoBehaviour
                         MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().down_value = 6;
                     }
 
-                    //ƒTƒuËŒ‚Ši“¬”h¶
+                    //ï¿½Tï¿½uï¿½ËŒï¿½ï¿½iï¿½ï¿½ï¿½hï¿½ï¿½
                     if (lastmove_name == "subshooting" && subshooting_flag && !subshooting_fightingvariants_flag)
                     {
                         SubShootingFinish();
@@ -896,7 +896,7 @@ public class Cpu_Control : MonoBehaviour
                         transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
                         lastmove_name = "subshooting_fightingvariants";
                         attack_direction = gameObject.transform.forward * 1;
-                        attack_direction.Normalize();//Î‚ß‚Ì‹——£‚ª’·‚­‚È‚é‚Ì‚ğ–h‚¬‚Ü‚·
+                        attack_direction.Normalize();//ï¿½Î‚ß‚Ì‹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Ì‚ï¿½hï¿½ï¿½ï¿½Ü‚ï¿½
                         attack_moving = attack_direction * boost_speed;
                         Leg_R.transform.GetComponent<BoxCollider>().enabled = true;
                     }
@@ -904,7 +904,7 @@ public class Cpu_Control : MonoBehaviour
             }
         }
 
-        //Ši“¬ˆ—
+        //ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (attack_flag)
         {
             attack_time += Time.deltaTime;
@@ -917,7 +917,7 @@ public class Cpu_Control : MonoBehaviour
                         gameObject.transform.LookAt(LockOnEnemy.transform);
                     }
                     attack_direction = gameObject.transform.forward * 1;
-                    attack_direction.Normalize();//Î‚ß‚Ì‹——£‚ª’·‚­‚È‚é‚Ì‚ğ–h‚¬‚Ü‚·
+                    attack_direction.Normalize();//ï¿½Î‚ß‚Ì‹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Ì‚ï¿½hï¿½ï¿½ï¿½Ü‚ï¿½
                     attack_moving = attack_direction * boost_speed * 1f;
                     rb.velocity = new Vector3(attack_moving.x, rb.velocity.y, attack_moving.z);
                 }
@@ -934,7 +934,7 @@ public class Cpu_Control : MonoBehaviour
             else
             {
                 attack_direction = gameObject.transform.forward * 1;
-                attack_direction.Normalize();//Î‚ß‚Ì‹——£‚ª’·‚­‚È‚é‚Ì‚ğ–h‚¬‚Ü‚·
+                attack_direction.Normalize();//ï¿½Î‚ß‚Ì‹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Ì‚ï¿½hï¿½ï¿½ï¿½Ü‚ï¿½
                 attack_moving = attack_direction * 10f;
                 rb.velocity = new Vector3(attack_moving.x, rb.velocity.y, attack_moving.z);
             }
@@ -945,7 +945,7 @@ public class Cpu_Control : MonoBehaviour
             }
         }
 
-        //ƒTƒuËŒ‚Ši“¬”h¶ˆ—
+        //ï¿½Tï¿½uï¿½ËŒï¿½ï¿½iï¿½ï¿½ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (subshooting_fightingvariants_flag)
         {
             subShooting_fightingvariants_time += Time.deltaTime;
@@ -956,7 +956,7 @@ public class Cpu_Control : MonoBehaviour
                     gameObject.transform.LookAt(LockOnEnemy.transform);
                 }
                 attack_direction = gameObject.transform.forward * 1;
-                attack_direction.Normalize();//Î‚ß‚Ì‹——£‚ª’·‚­‚È‚é‚Ì‚ğ–h‚¬‚Ü‚·
+                attack_direction.Normalize();//ï¿½Î‚ß‚Ì‹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Ì‚ï¿½hï¿½ï¿½ï¿½Ü‚ï¿½
                 attack_moving = attack_direction * boost_speed;
                 rb.velocity = new Vector3(attack_moving.x, attack_moving.y, attack_moving.z);
                 isinair_subshooting_fightingvariants_flag = air_flag;
@@ -974,7 +974,7 @@ public class Cpu_Control : MonoBehaviour
         }
     }
 
-    //Ši“¬I—¹
+    //ï¿½iï¿½ï¿½ï¿½Iï¿½ï¿½
     void AttackFinish()
     {
         anim.SetBool("Attack_Induction", false);
@@ -1010,7 +1010,7 @@ public class Cpu_Control : MonoBehaviour
         Leg_R.transform.GetComponent<BoxCollider>().enabled = false;
     }
 
-    //“ÁêŠi“¬ƒ{ƒ^ƒ“§Œä
+    //ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void SpecialAttackControls()
     {
         Vector3 specialattack_direction;
@@ -1036,7 +1036,7 @@ public class Cpu_Control : MonoBehaviour
                 }
                 lastmove_name = "specialattack";
                 specialattack_direction = gameObject.transform.forward * 1;
-                specialattack_direction.Normalize();//Î‚ß‚Ì‹——£‚ª’·‚­‚È‚é‚Ì‚ğ–h‚¬‚Ü‚·
+                specialattack_direction.Normalize();//ï¿½Î‚ß‚Ì‹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Ì‚ï¿½hï¿½ï¿½ï¿½Ü‚ï¿½
                 specialattack_moving = specialattack_direction * boost_speed * 1.2f;
             }
         }
@@ -1058,7 +1058,7 @@ public class Cpu_Control : MonoBehaviour
         }
     }
 
-    //“ÁêŠi“¬I—¹
+    //ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½Iï¿½ï¿½
     void SpecialAttackFinish()
     {
         anim.SetBool("SpecialAttack", false);
@@ -1067,7 +1067,7 @@ public class Cpu_Control : MonoBehaviour
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
 
-    //Šµ«§Œä
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void InertiaControl()
     {
         if (air_flag && !boost_flag)
@@ -1087,19 +1087,19 @@ public class Cpu_Control : MonoBehaviour
         }
     }
 
-    //d—ÍƒIƒt
+    //ï¿½dï¿½ÍƒIï¿½t
     void GravityOff()
     {
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
     }
 
-    //‘«~‚ß
+    //ï¿½ï¿½ï¿½~ï¿½ï¿½
     void Rigidity()
     {
         rb.velocity = new Vector3(0, 0, 0);
     }
 
-    //‚æ‚ë‚¯
+    //ï¿½ï¿½ë‚¯
     void Stagger_Control()
     {
         if (stagger_flag || down_flag)
@@ -1260,7 +1260,7 @@ public class Cpu_Control : MonoBehaviour
                     if (other.gameObject.CompareTag("Bullet") || other.gameObject.CompareTag("Untagged"))
                     {
                         other_forward = other.transform.position;
-                        //ƒK[ƒh¬Œ÷
+                        //ï¿½Kï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½
                         if (defense_flag && Vector3.Angle(transform.forward, other.gameObject.transform.forward) >= 90)
                         {
                             Transform other_transform = other.transform;
