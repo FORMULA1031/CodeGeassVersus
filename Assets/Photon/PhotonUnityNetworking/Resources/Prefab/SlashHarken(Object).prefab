@@ -328,8 +328,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 10
-  correctionfactor: 0.05
-  down_value: 0.1
+  correctionFactor: 0.05
+  downValue: 0.1
   speed: 200
   induction_x: 2
   induction_y: 2

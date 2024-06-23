@@ -8,61 +8,61 @@ public class Cpu_Control : MonoBehaviour
 {
     Rigidbody rb;
     public float boost_amount;
-    float walk_speed = 15;
-    float boost_speed = 60;
-    float jump_power = 50;
-    float jumprug_time = 0;
-    float landing_time = 0;
-    float BoostButtonTime = 0;
-    float boostconsumed_time = 0;
-    float slide_time = 0;
-    float mainshooting_time = 0;
-    float mainshooting_reloadtime = 0;
-    float subshooting_time = 0;
-    float subshooting_reloadtime = 0;
-    float subShooting_fightingvariants_time = 0;
-    float specialshooting_time = 0;
-    float specialshooting_reloadtime = 0;
-    float attack_time = 0;
-    float attackfinish_time = 1.8f;
-    float specialattack_time = 0;
-    float stagger_time = 0;
-    float correctionfactor = 1;
-    float correctionfactor_resettime = 0;
-    float down_value = 0;
+    const float WALK_SPEED = 15;
+    const float BOOST_SPEED = 60;
+    const float JUMP_POWER = 50;
+    float jumpRugTime = 0;
+    float landingTime = 0;
+    float boostButtonTime = 0;
+    float boostConsumedTime = 0;
+    float slideTime = 0;
+    float mainShootingTime = 0;
+    float mainShootingReloadTime = 0;
+    float subShootingTime = 0;
+    float subShootingReloadTime = 0;
+    float subShootingFightingVariantsTime = 0;
+    float specialShootingTime = 0;
+    float specialShootingReloadTime = 0;
+    float attackTime = 0;
+    float attackFinishTime = 1.8f;
+    float specialAttackTime = 0;
+    float staggerTime = 0;
+    float correctionFactor = 1;
+    float correctionFactorResetTime = 0;
+    float downValue = 0;
     float nextcpumove_time = 0;
     float x = 0;
     float z = 0;
-    bool jump_flag = false;
-    bool rise_flag = false;
-    bool leverinsert_flag = false;
-    bool landing_flag = false;
-    bool air_flag = false;
-    bool boost_flag = false;
-    bool slide_flag = false;
-    bool stiffness_flag = false;
-    bool incapableofaction_flag = false;
-    bool mainshooting_flag = false;
-    bool mainshootingfiring_flag = false;
-    bool subshooting_flag = false;
-    bool subshootingfiring_flag = false;
-    bool subshooting_fightingvariants_flag = false;
-    bool isinair_subshooting_fightingvariants_flag = false;
-    bool attack_flag = false;
-    bool attack1_flag = false;
-    bool attack2_flag = false;
-    bool attack3_flag = false;
-    bool specialshooting_flag = false;
-    bool specialshootinganimation_flag = false;
-    bool specialshootingfiring_flag = false;
-    bool induction_flag = true;
-    public bool inductionoff_flag = false;
-    bool stagger_flag = false;
-    public bool down_flag = false;
-    bool underattack_flag = false;
-    bool defense_flag = false;
-    bool step_flag = false;
-    bool hitstart_stay_flag = false;
+    bool isJump = false;
+    bool isRise = false;
+    bool isLeverInsert = false;
+    bool isLanding = false;
+    bool isAir = false;
+    bool isBoost = false;
+    bool isSlide = false;
+    bool isStiffness = false;
+    bool isIncapableAction = false;
+    bool isMainShooting = false;
+    bool isMainShootingFiring = false;
+    bool isSubShooting = false;
+    bool isSubShootingFiring = false;
+    bool isSubShootingFightingVariants = false;
+    bool isSubShootingFightingVariantsInAir = false;
+    bool isAttack = false;
+    bool isAttack1 = false;
+    bool isAttack2 = false;
+    bool isAttack3 = false;
+    bool isSpecialShooting = false;
+    bool isSpecialShootingAnimation = false;
+    bool isSpecialShootingFiring = false;
+    bool isInduction = true;
+    public bool isInductionOff = false;
+    bool isStagger = false;
+    public bool isDown = false;
+    bool isUnderAttack = false;
+    bool isDefense = false;
+    bool isStep = false;
+    bool isHitStartStay = false;
     bool cpu_jump = false;
     bool cpu_boost = false;
     bool cpu_shooting = false;
@@ -74,9 +74,9 @@ public class Cpu_Control : MonoBehaviour
     bool cpumoving_flag = false;
     public int durable_value;
     public int durable_maxvalue;
-    int boost_maxamount = 100;
+    int BOOST_MAX = 100;
     public int mainshooting_number;
-    bool specialattack_flag = false;
+    bool isSpecialAttack = false;
     int mainshooting_maxnumber;
     public int subshooting_number;
     int subshooting_maxnumber;
@@ -114,7 +114,7 @@ public class Cpu_Control : MonoBehaviour
         subshooting_maxnumber = subshooting_number;
         specialshooting_maxnumber = specialshooting_number;
         durable_value = durable_maxvalue;
-        boost_amount = boost_maxamount;
+        boost_amount = BOOST_MAX;
     }
 
     // Update is called once per frame
@@ -212,23 +212,23 @@ public class Cpu_Control : MonoBehaviour
 
         if (boost_amount <= 0)
         {
-            incapableofaction_flag = true;
+            isIncapableAction = true;
         }
-        if (correctionfactor < 1)
+        if (correctionFactor < 1)
         {
-            correctionfactor_resettime += Time.deltaTime;
-            if (correctionfactor_resettime >= 3f)
+            correctionFactorResetTime += Time.deltaTime;
+            if (correctionFactorResetTime >= 3f)
             {
-                correctionfactor = 1;
-                down_value = 0;
+                correctionFactor = 1;
+                downValue = 0;
             }
         }
 
-        if (!(defense_flag || subshooting_fightingvariants_flag) && !rb.useGravity)
+        if (!(isDefense || isSubShootingFightingVariants) && !rb.useGravity)
         {
             rb.useGravity = true;
         }
-        if (!down_flag && !stagger_flag)
+        if (!isDown && !isStagger)
         {
             MoveKeyControls();
             JumpKeyControls();
@@ -244,13 +244,13 @@ public class Cpu_Control : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!stiffness_flag)
+        if (!isStiffness)
         {
-            if (!incapableofaction_flag)
+            if (!isIncapableAction)
             {
-                if (!landing_flag && !slide_flag)
+                if (!isLanding && !isSlide)
                 {
-                    if (leverinsert_flag && !defense_flag)
+                    if (isLeverInsert && !isDefense)
                     {
                         rb.velocity = new Vector3(movingvelocity.x, rb.velocity.y, movingvelocity.z);
                         KMF_Rotation();
@@ -261,18 +261,18 @@ public class Cpu_Control : MonoBehaviour
                         rb.velocity = new Vector3(0, rb.velocity.y, 0);
                     }
                 }
-                else if (slide_flag)
+                else if (isSlide)
                 {
-                    rb.velocity = transform.forward * (walk_speed);
+                    rb.velocity = transform.forward * (WALK_SPEED);
                 }
             }
         }
         else
         {
-            if (down_flag || specialattack_flag || subshooting_fightingvariants_flag)
+            if (isDown || isSpecialAttack || isSubShootingFightingVariants)
             {
             }
-            else if (attack_flag || step_flag || stagger_flag)
+            else if (isAttack || isStep || isStagger)
             {
                 GravityOff();
             }
@@ -301,27 +301,27 @@ public class Cpu_Control : MonoBehaviour
         movingdirection =  new Vector3(x, rb.velocity.y, z);
         if (x != 0 || z != 0)
         {
-            leverinsert_flag = true;
+            isLeverInsert = true;
             anim.SetBool("Walk", true);
         }
         else
         {
-            leverinsert_flag = false;
+            isLeverInsert = false;
             anim.SetBool("Walk", false);
         }
         movingdirection.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-        if (!boost_flag && !slide_flag)
+        if (!isBoost && !isSlide)
         {
-            if (!air_flag)
+            if (!isAir)
             {
-                movingvelocity = movingdirection * walk_speed;
+                movingvelocity = movingdirection * WALK_SPEED;
             }
         }
     }
 
     void KMF_Rotation()
     {
-        if (leverinsert_flag)
+        if (isLeverInsert)
         {
             Vector3 direction = new Vector3 (0, 0); //������ύX����
             if (x > 0)
@@ -362,32 +362,32 @@ public class Cpu_Control : MonoBehaviour
 
     void JumpKeyControls()
     {
-        if (!incapableofaction_flag)
+        if (!isIncapableAction)
         {
             //�W�����v
-            if (cpu_jump && !jump_flag)
+            if (cpu_jump && !isJump)
             {
                 BoostFinish();
-                jump_flag = true;
-                jumprug_time = 0;
-                boost_flag = false;
-                BoostButtonTime = 0;
+                isJump = true;
+                jumpRugTime = 0;
+                isBoost = false;
+                boostButtonTime = 0;
             }
             //�u�[�X�g
-            else if (cpu_boost && jump_flag)
+            else if (cpu_boost && isJump)
             {
-                BoostButtonTime += Time.deltaTime;
-                if (BoostButtonTime < 0.2f)
+                boostButtonTime += Time.deltaTime;
+                if (boostButtonTime < 0.2f)
                 {
-                    boost_flag = true;
-                    jump_flag = false;
-                    rise_flag = false;
+                    isBoost = true;
+                    isJump = false;
+                    isRise = false;
                     anim.SetBool("Boost_Landing", true);
                     anim.SetBool("SubShooting_Start", false);
                     anim.SetBool("SpecialShooting_Start", false);
                     anim.SetBool("Boost_Landing_Finish", false);
-                    slide_flag = false;
-                    slide_time = 0;
+                    isSlide = false;
+                    slideTime = 0;
                     MainShootingFinish();
                     SubShootingFinish();
                     SubShootingFightingVariantsFinish();
@@ -395,56 +395,56 @@ public class Cpu_Control : MonoBehaviour
                     AttackFinish();
                     SpecialAttackFinish();
                     boost_amount -= 15;
-                    boostconsumed_time = 0;
+                    boostConsumedTime = 0;
                     gameObject.transform.Find("Lancelot/Rig 1").GetComponent<Rig>().weight = 0;
                 }
             }
 
             //�W�����v����
-            if (jump_flag && !boost_flag)
+            if (isJump && !isBoost)
             {
-                if (!stiffness_flag)
+                if (!isStiffness)
                 {
-                    jumprug_time += Time.deltaTime;
-                    if (jumprug_time >= 0.2f && !rise_flag)
+                    jumpRugTime += Time.deltaTime;
+                    if (jumpRugTime >= 0.2f && !isRise)
                     {
-                        if (!landing_flag)
+                        if (!isLanding)
                         {
                             inertia_direction = gameObject.transform.forward;
                             lastmove_name = "jump";
                             anim.SetBool("Jump", true);
                             anim.SetBool("Boost_Landing", false);
                             boost_amount -= 10;
-                            rise_flag = true;
+                            isRise = true;
                         }
                     }
-                    else if (jumprug_time <= 1.0f && jumprug_time >= 0.2f)
+                    else if (jumpRugTime <= 1.0f && jumpRugTime >= 0.2f)
                     {
-                        if (!landing_flag)
+                        if (!isLanding)
                         {
                             Vector3 jump_direction;
                             Vector3 jump_moving;
 
                             jump_direction = gameObject.transform.up * 1;
                             jump_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-                            jump_moving = jump_direction * jump_power;
+                            jump_moving = jump_direction * JUMP_POWER;
                             rb.velocity = new Vector3(rb.velocity.x, jump_moving.y, rb.velocity.z);
                         }
-                        rise_flag = false;
-                        jump_flag = false;
+                        isRise = false;
+                        isJump = false;
                     }
                 }
                 else
                 {
-                    if (underattack_flag || step_flag)
+                    if (isUnderAttack || isStep)
                     {
-                        jumprug_time += Time.deltaTime;
-                        if (jumprug_time >= 0.2f && !rise_flag)
-                            jump_flag = false;
+                        jumpRugTime += Time.deltaTime;
+                        if (jumpRugTime >= 0.2f && !isRise)
+                            isJump = false;
                     }
                     else
                     {
-                        jump_flag = false;
+                        isJump = false;
                     }
                 }
             }
@@ -454,41 +454,41 @@ public class Cpu_Control : MonoBehaviour
             }
 
             //�u�[�X�g��
-            if (boost_flag)
+            if (isBoost)
             {
-                if (movingdirection != new Vector3(0, 0, 0) && leverinsert_flag)
+                if (movingdirection != new Vector3(0, 0, 0) && isLeverInsert)
                 {
-                    movingvelocity = movingdirection * boost_speed;
+                    movingvelocity = movingdirection * BOOST_SPEED;
                 }
                 else
                 {
                     Vector3 boost_direction;
                     boost_direction = transform.forward;
                     boost_direction.Normalize();
-                    movingvelocity = boost_direction * boost_speed;
+                    movingvelocity = boost_direction * BOOST_SPEED;
                     rb.velocity = new Vector3(movingvelocity.x, rb.velocity.y, movingvelocity.z);
                 }
-                boostconsumed_time += Time.deltaTime;
-                if (boostconsumed_time >= 0.1f)
+                boostConsumedTime += Time.deltaTime;
+                if (boostConsumedTime >= 0.1f)
                 {
                     boost_amount -= 2;
-                    boostconsumed_time = 0;
+                    boostConsumedTime = 0;
                 }
             }
         }
 
         //�u�[�X�g�I��
-        if ((!leverinsert_flag && !cpu_boost) || incapableofaction_flag)
+        if ((!isLeverInsert && !cpu_boost) || isIncapableAction)
         {
-            if (boost_flag)
+            if (isBoost)
             {
                 BoostFinish();
-                if (!air_flag)
+                if (!isAir)
                 {
-                    slide_flag = true;
-                    underattack_flag = true;
+                    isSlide = true;
+                    isUnderAttack = true;
                 }
-                else if (air_flag)
+                else if (isAir)
                 {
                     inertia_direction = gameObject.transform.forward;
                 }
@@ -496,11 +496,11 @@ public class Cpu_Control : MonoBehaviour
         }
 
         //�Y�T����
-        if (slide_flag)
+        if (isSlide)
         {
             anim.SetBool("Boost_Landing_Finish", true);
-            slide_time += Time.deltaTime;
-            if (slide_time > 1.5f)
+            slideTime += Time.deltaTime;
+            if (slideTime > 1.5f)
             {
                 SlideFinish();
             }
@@ -510,7 +510,7 @@ public class Cpu_Control : MonoBehaviour
     //�u�[�X�g�I��
     void BoostFinish()
     {
-        boost_flag = false;
+        isBoost = false;
         lastmove_name = "boost";
         anim.SetBool("Boost_Landing", false);
     }
@@ -519,27 +519,27 @@ public class Cpu_Control : MonoBehaviour
     void SlideFinish()
     {
         anim.SetBool("Boost_Landing_Finish", false);
-        slide_flag = false;
-        slide_time = 0;
+        isSlide = false;
+        slideTime = 0;
         if (lastmove_name != "step")
-            boost_amount = boost_maxamount;
-        incapableofaction_flag = false;
-        underattack_flag = false;
+            boost_amount = BOOST_MAX;
+        isIncapableAction = false;
+        isUnderAttack = false;
     }
 
     //���n����
     void LandingTime()
     {
-        if (landing_flag && !underattack_flag)
+        if (isLanding && !isUnderAttack)
         {
             anim.SetBool("Landing", true);
-            landing_time += Time.deltaTime;
-            if (landing_time >= 0.5f)
+            landingTime += Time.deltaTime;
+            if (landingTime >= 0.5f)
             {
-                landing_flag = false;
-                landing_time = 0;
+                isLanding = false;
+                landingTime = 0;
                 anim.SetBool("Landing", false);
-                underattack_flag = false;
+                isUnderAttack = false;
             }
         }
     }
@@ -554,17 +554,17 @@ public class Cpu_Control : MonoBehaviour
     //�ˌ��{�^������
     void ShootingKeyControls()
     {
-        if (!incapableofaction_flag && (!underattack_flag || lastmove_name == "subshooting"))
+        if (!isIncapableAction && (!isUnderAttack || lastmove_name == "subshooting"))
         {
-            if (cpu_shooting && !mainshooting_flag)
+            if (cpu_shooting && !isMainShooting)
             {
-                if (mainshooting_number >= 1 && !landing_flag)
+                if (mainshooting_number >= 1 && !isLanding)
                 {
-                    mainshooting_flag = true;
+                    isMainShooting = true;
                     anim.SetBool("MainShooting", true);
-                    mainshootingfiring_flag = false;
-                    mainshooting_time = 0;
-                    underattack_flag = true;
+                    isMainShootingFiring = false;
+                    mainShootingTime = 0;
+                    isUnderAttack = true;
                     Varis_Normal.SetActive(true);
                     Varis_FullPower.SetActive(false);
                     if (LockOnEnemy != null)
@@ -585,7 +585,7 @@ public class Cpu_Control : MonoBehaviour
                         if (Mathf.Abs(Vector3.Distance(LockOnEnemy.transform.position, myforward))
                             > Mathf.Abs(Vector3.Distance(LockOnEnemy.transform.position, myback)))
                         {
-                            stiffness_flag = true;
+                            isStiffness = true;
                             gameObject.transform.LookAt(LockOnEnemy.transform);
                         }
                     }
@@ -594,20 +594,20 @@ public class Cpu_Control : MonoBehaviour
         }
 
         //���C���ˌ���
-        if (mainshooting_flag)
+        if (isMainShooting)
         {
-            mainshooting_time += Time.deltaTime;
-            if (mainshooting_time >= 0.23f && !mainshootingfiring_flag)
+            mainShootingTime += Time.deltaTime;
+            if (mainShootingTime >= 0.23f && !isMainShootingFiring)
             {
                 mainshooting_number--;
-                mainshootingfiring_flag = true;
+                isMainShootingFiring = true;
                 GameObject _beam = Instantiate(Beam, Varis_Normal.transform.Find("Muzzle").gameObject.transform.position, Varis_Normal.transform.Find("Muzzle").gameObject.transform.rotation);
                 _beam.GetComponent<Beam_Control>().LockOnEnemySetting(gameObject, LockOnEnemy);
             }
-            if (mainshooting_time >= 1.0f)
+            if (mainShootingTime >= 1.0f)
             {
                 MainShootingFinish();
-                underattack_flag = false;
+                isUnderAttack = false;
             }
 
             if (LockOnEnemy == null)
@@ -619,19 +619,19 @@ public class Cpu_Control : MonoBehaviour
         //�����[�h
         if (mainshooting_maxnumber > mainshooting_number)
         {
-            mainshooting_reloadtime += Time.deltaTime;
-            if (mainshooting_reloadtime >= 3f)
+            mainShootingReloadTime += Time.deltaTime;
+            if (mainShootingReloadTime >= 3f)
             {
                 mainshooting_number++;
-                mainshooting_reloadtime = 0;
+                mainShootingReloadTime = 0;
             }
         }
     }
 
     void MainShootingFinish()
     {
-        mainshooting_flag = false;
-        stiffness_flag = false;
+        isMainShooting = false;
+        isStiffness = false;
         anim.SetBool("MainShooting", false);
         gameObject.transform.Find("Lancelot/Rig 1").GetComponent<Rig>().weight = 0;
     }
@@ -639,24 +639,24 @@ public class Cpu_Control : MonoBehaviour
     //�T�u�ˌ�����
     void SubShootingControls()
     {
-        if (!incapableofaction_flag && !underattack_flag)
+        if (!isIncapableAction && !isUnderAttack)
         {
-            if (cpu_subshooting && !subshooting_flag)
+            if (cpu_subshooting && !isSubShooting)
             {
-                if (subshooting_number >= 1 && !landing_flag)
+                if (subshooting_number >= 1 && !isLanding)
                 {
                     anim.SetBool("SubShooting_Start", true);
-                    subshooting_flag = true;
-                    subshootingfiring_flag = false;
-                    subshooting_time = 0;
-                    stiffness_flag = true;
-                    underattack_flag = true;
+                    isSubShooting = true;
+                    isSubShootingFiring = false;
+                    subShootingTime = 0;
+                    isStiffness = true;
+                    isUnderAttack = true;
                     Varis_Normal.SetActive(true);
                     Varis_FullPower.SetActive(false);
 
-                    boost_flag = false;
+                    isBoost = false;
                     anim.SetBool("Boost_Landing", false);
-                    if (induction_flag && LockOnEnemy != null)
+                    if (isInduction && LockOnEnemy != null)
                     {
                         gameObject.transform.LookAt(LockOnEnemy.transform);
                     }
@@ -665,13 +665,13 @@ public class Cpu_Control : MonoBehaviour
             }
         }
 
-        if (subshooting_flag)
+        if (isSubShooting)
         {
-            subshooting_time += Time.deltaTime;
-            if (subshooting_time >= 0.3f && !subshootingfiring_flag)
+            subShootingTime += Time.deltaTime;
+            if (subShootingTime >= 0.3f && !isSubShootingFiring)
             {
                 subshooting_number--;
-                subshootingfiring_flag = true;
+                isSubShootingFiring = true;
                 SlashHarken_Instance = Instantiate(SlashHarken, Lancelot_ShashHarken.transform.position, Lancelot_ShashHarken.transform.rotation);
                 Vector3 SlashHarkenAngle = SlashHarken_Instance.transform.eulerAngles;
                 SlashHarkenAngle.y -= 180.0f; // ���[���h���W����ɁAy�������ɂ�����]��10�x�ɕύX
@@ -687,26 +687,26 @@ public class Cpu_Control : MonoBehaviour
                 }
                 lastmove_name = "subshooting";
             }
-            if (subshooting_time >= 0.8f && subshooting_time < 1.5f)
+            if (subShootingTime >= 0.8f && subShootingTime < 1.5f)
             {
                 anim.SetBool("SubShooting_Start", false);
                 anim.SetBool("SubShooting_Finish", true);
             }
-            if (subshooting_time >= 1.5f)
+            if (subShootingTime >= 1.5f)
             {
                 SubShootingFinish();
-                underattack_flag = false;
+                isUnderAttack = false;
             }
         }
 
         //�����[�h
         if (subshooting_maxnumber > subshooting_number)
         {
-            subshooting_reloadtime += Time.deltaTime;
-            if (subshooting_reloadtime >= 2f)
+            subShootingReloadTime += Time.deltaTime;
+            if (subShootingReloadTime >= 2f)
             {
                 subshooting_number++;
-                subshooting_reloadtime = 0;
+                subShootingReloadTime = 0;
             }
         }
     }
@@ -714,8 +714,8 @@ public class Cpu_Control : MonoBehaviour
     void SubShootingFinish()
     {
         anim.SetBool("SubShooting_Finish", false);
-        subshooting_flag = false;
-        stiffness_flag = false;
+        isSubShooting = false;
+        isStiffness = false;
         gameObject.transform.eulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
         Destroy(SlashHarken_Instance);
     }
@@ -723,51 +723,51 @@ public class Cpu_Control : MonoBehaviour
     //����ˌ��{�^������
     void SpecialShootingControls()
     {
-        if (!incapableofaction_flag
-            && (!underattack_flag || lastmove_name == "mainshooting" || lastmove_name == "specialattack"))
+        if (!isIncapableAction
+            && (!isUnderAttack || lastmove_name == "mainshooting" || lastmove_name == "specialattack"))
         {
-            if (cpu_specialshooting && !specialshooting_flag)
+            if (cpu_specialshooting && !isSpecialShooting)
             {
-                if (specialshooting_number >= 1 && !landing_flag)
+                if (specialshooting_number >= 1 && !isLanding)
                 {
                     MainShootingFinish();
                     SpecialAttackFinish();
                     anim.SetBool("SpecialShooting", true);
                     anim.SetBool("SpecialShooting_Start", true);
-                    specialshooting_flag = true;
-                    specialshootingfiring_flag = false;
-                    specialshooting_time = 0;
-                    specialshootinganimation_flag = true;
-                    stiffness_flag = true;
-                    underattack_flag = true;
+                    isSpecialShooting = true;
+                    isSpecialShootingFiring = false;
+                    specialShootingTime = 0;
+                    isSpecialShootingAnimation = true;
+                    isStiffness = true;
+                    isUnderAttack = true;
                     Varis_Normal.SetActive(false);
                     Varis_FullPower.SetActive(true);
 
-                    boost_flag = false;
+                    isBoost = false;
                     anim.SetBool("Boost_Landing", false);
 
-                    if (induction_flag && LockOnEnemy != null)
+                    if (isInduction && LockOnEnemy != null)
                     {
                         gameObject.transform.LookAt(LockOnEnemy.transform);
                     }
                     lastmove_name = "specialshooting";
                 }
             }
-            else if (specialshooting_flag && specialshootinganimation_flag)
+            else if (isSpecialShooting && isSpecialShootingAnimation)
             {
                 anim.SetBool("SpecialShooting_Start", false);
-                specialshootinganimation_flag = false;
+                isSpecialShootingAnimation = false;
             }
         }
 
         //����ˌ���
-        if (specialshooting_flag)
+        if (isSpecialShooting)
         {
-            specialshooting_time += Time.deltaTime;
-            if (specialshooting_time >= 0.6f && !specialshootingfiring_flag)
+            specialShootingTime += Time.deltaTime;
+            if (specialShootingTime >= 0.6f && !isSpecialShootingFiring)
             {
                 specialshooting_number--;
-                specialshootingfiring_flag = true;
+                isSpecialShootingFiring = true;
                 GameObject _Beam_FullPower = Instantiate(Beam_FullPower, Varis_FullPower.transform.Find("Muzzle").gameObject.transform.position, Varis_FullPower.transform.Find("Muzzle").gameObject.transform.rotation);
                 if (LockOnEnemy != null)
                 {
@@ -778,7 +778,7 @@ public class Cpu_Control : MonoBehaviour
                     _Beam_FullPower.GetComponent<Beam_Control>().LockOnEnemySetting(gameObject, null);
                 }
             }
-            if (specialshooting_time >= 1.5f)
+            if (specialShootingTime >= 1.5f)
             {
                 SpecialShootingFinish();
             }
@@ -787,11 +787,11 @@ public class Cpu_Control : MonoBehaviour
         //�����[�h
         if (specialshooting_number == 0)
         {
-            specialshooting_reloadtime += Time.deltaTime;
-            if (specialshooting_reloadtime >= 5f)
+            specialShootingReloadTime += Time.deltaTime;
+            if (specialShootingReloadTime >= 5f)
             {
                 specialshooting_number = specialshooting_maxnumber;
-                specialshooting_reloadtime = 0;
+                specialShootingReloadTime = 0;
             }
         }
     }
@@ -799,9 +799,9 @@ public class Cpu_Control : MonoBehaviour
     void SpecialShootingFinish()
     {
         anim.SetBool("SpecialShooting", false);
-        specialshooting_flag = false;
-        stiffness_flag = false;
-        underattack_flag = false;
+        isSpecialShooting = false;
+        isStiffness = false;
+        isUnderAttack = false;
         Varis_Normal.SetActive(true);
         Varis_FullPower.SetActive(false);
         gameObject.transform.eulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
@@ -812,21 +812,21 @@ public class Cpu_Control : MonoBehaviour
     {
         Vector3 attack_direction;
 
-        if (!incapableofaction_flag)
+        if (!isIncapableAction)
         {
             if (cpu_fighting)
             {
-                if (!landing_flag || underattack_flag)
+                if (!isLanding || isUnderAttack)
                 {
-                    if (!attack_flag && !attack1_flag && (!underattack_flag || lastmove_name == "specialattack"))
+                    if (!isAttack && !isAttack1 && (!isUnderAttack || lastmove_name == "specialattack"))
                     {
                         SpecialAttackFinish();
                         anim.SetBool("Attack_Induction", true);
-                        attack_flag = true;
-                        stiffness_flag = true;
-                        underattack_flag = true;
-                        attack_time = 0;
-                        attackfinish_time = 1.8f;
+                        isAttack = true;
+                        isStiffness = true;
+                        isUnderAttack = true;
+                        attackTime = 0;
+                        attackFinishTime = 1.8f;
                         Varis_Normal.SetActive(false);
                         Varis_FullPower.SetActive(false);
                         MVS_R.SetActive(true);
@@ -836,60 +836,60 @@ public class Cpu_Control : MonoBehaviour
                         MVS_R.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
                         MVS_L.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
 
-                        boost_flag = false;
+                        isBoost = false;
                         anim.SetBool("Boost_Landing", false);
                         lastmove_name = "attack";
                         transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
                     }
-                    else if (attack_flag && attack1_flag && !attack2_flag
+                    else if (isAttack && isAttack1 && !isAttack2
                         && anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|Attack_01"))
                     {
                         anim.SetBool("Attack1", false);
                         anim.SetBool("Attack2", true);
-                        attack2_flag = true;
-                        attack_time = 0;
-                        attackfinish_time = 1.0f;
+                        isAttack2 = true;
+                        attackTime = 0;
+                        attackFinishTime = 1.0f;
                         MVS_R.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
                         MVS_L.transform.Find("MVS").GetComponent<BoxCollider>().enabled = true;
                         MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().power = 70;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().correctionfactor = 0.15f;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().down_value = 0.3f;
+                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().correctionFactor = 0.15f;
+                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().downValue = 0.3f;
                     }
-                    else if (attack2_flag
+                    else if (isAttack2
                         && anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|Attack_02"))
                     {
                         anim.SetBool("Attack1", false);
                         anim.SetBool("Attack2", false);
                         anim.SetBool("Attack3", true);
-                        attack3_flag = true;
-                        attack2_flag = false;
-                        attack_time = 0;
-                        attackfinish_time = 1.0f;
+                        isAttack3 = true;
+                        isAttack2 = false;
+                        attackTime = 0;
+                        attackFinishTime = 1.0f;
                         MVS_R.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
                         MVS_L.transform.Find("MVS").GetComponent<BoxCollider>().enabled = true;
                         MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().power = 80;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().correctionfactor = 0.12f;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().down_value = 6;
+                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().correctionFactor = 0.12f;
+                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().downValue = 6;
                     }
 
                     //�T�u�ˌ��i���h��
-                    if (lastmove_name == "subshooting" && subshooting_flag && !subshooting_fightingvariants_flag)
+                    if (lastmove_name == "subshooting" && isSubShooting && !isSubShootingFightingVariants)
                     {
                         SubShootingFinish();
                         anim.SetBool("SubShooting_FightingVariants", true);
                         anim.SetBool("SubShooting_Start", false);
-                        subshooting_fightingvariants_flag = true;
-                        stiffness_flag = true;
-                        underattack_flag = true;
+                        isSubShootingFightingVariants = true;
+                        isStiffness = true;
+                        isUnderAttack = true;
                         rb.useGravity = false;
-                        subShooting_fightingvariants_time = 0;
+                        subShootingFightingVariantsTime = 0;
                         Varis_Normal.SetActive(false);
                         Varis_FullPower.SetActive(false);
 
-                        boost_flag = false;
+                        isBoost = false;
                         anim.SetBool("Boost_Landing", false);
 
-                        if (induction_flag && LockOnEnemy != null)
+                        if (isInduction && LockOnEnemy != null)
                         {
                             gameObject.transform.LookAt(LockOnEnemy.transform);
                         }
@@ -897,7 +897,7 @@ public class Cpu_Control : MonoBehaviour
                         lastmove_name = "subshooting_fightingvariants";
                         attack_direction = gameObject.transform.forward * 1;
                         attack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-                        attack_moving = attack_direction * boost_speed;
+                        attack_moving = attack_direction * BOOST_SPEED;
                         Leg_R.transform.GetComponent<BoxCollider>().enabled = true;
                     }
                 }
@@ -905,12 +905,12 @@ public class Cpu_Control : MonoBehaviour
         }
 
         //�i������
-        if (attack_flag)
+        if (isAttack)
         {
-            attack_time += Time.deltaTime;
-            if (attack_time <= 0.8f && (!attack1_flag && !attack2_flag && !attack3_flag))
+            attackTime += Time.deltaTime;
+            if (attackTime <= 0.8f && (!isAttack1 && !isAttack2 && !isAttack3))
             {
-                if (induction_flag)
+                if (isInduction)
                 {
                     if (LockOnEnemy != null)
                     {
@@ -918,15 +918,15 @@ public class Cpu_Control : MonoBehaviour
                     }
                     attack_direction = gameObject.transform.forward * 1;
                     attack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-                    attack_moving = attack_direction * boost_speed * 1f;
+                    attack_moving = attack_direction * BOOST_SPEED * 1f;
                     rb.velocity = new Vector3(attack_moving.x, rb.velocity.y, attack_moving.z);
                 }
             }
-            else if (attack_time > 0.8f && (!attack1_flag && !attack2_flag && !attack3_flag))
+            else if (attackTime > 0.8f && (!isAttack1 && !isAttack2 && !isAttack3))
             {
-                attack_time = 0;
-                attackfinish_time = 1.0f;
-                attack1_flag = true;
+                attackTime = 0;
+                attackFinishTime = 1.0f;
+                isAttack1 = true;
                 anim.SetBool("Attack_Induction", false);
                 anim.SetBool("Attack1", true);
                 Rigidity();
@@ -938,7 +938,7 @@ public class Cpu_Control : MonoBehaviour
                 attack_moving = attack_direction * 10f;
                 rb.velocity = new Vector3(attack_moving.x, rb.velocity.y, attack_moving.z);
             }
-            if (attack_time >= attackfinish_time)
+            if (attackTime >= attackFinishTime)
             {
                 AttackFinish();
                 transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
@@ -946,29 +946,29 @@ public class Cpu_Control : MonoBehaviour
         }
 
         //�T�u�ˌ��i���h������
-        if (subshooting_fightingvariants_flag)
+        if (isSubShootingFightingVariants)
         {
-            subShooting_fightingvariants_time += Time.deltaTime;
-            if (subShooting_fightingvariants_time <= 0.2f)
+            subShootingFightingVariantsTime += Time.deltaTime;
+            if (subShootingFightingVariantsTime <= 0.2f)
             {
-                if (induction_flag && LockOnEnemy != null)
+                if (isInduction && LockOnEnemy != null)
                 {
                     gameObject.transform.LookAt(LockOnEnemy.transform);
                 }
                 attack_direction = gameObject.transform.forward * 1;
                 attack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-                attack_moving = attack_direction * boost_speed;
+                attack_moving = attack_direction * BOOST_SPEED;
                 rb.velocity = new Vector3(attack_moving.x, attack_moving.y, attack_moving.z);
-                isinair_subshooting_fightingvariants_flag = air_flag;
+                isSubShootingFightingVariantsInAir = isAir;
             }
-            if (subShooting_fightingvariants_time >= 2.0f)
+            if (subShootingFightingVariantsTime >= 2.0f)
             {
                 SubShootingFightingVariantsFinish();
-                if (!isinair_subshooting_fightingvariants_flag)
+                if (!isSubShootingFightingVariantsInAir)
                 {
-                    landing_flag = true;
-                    boost_amount = boost_maxamount;
-                    incapableofaction_flag = false;
+                    isLanding = true;
+                    boost_amount = BOOST_MAX;
+                    isIncapableAction = false;
                 }
             }
         }
@@ -981,13 +981,13 @@ public class Cpu_Control : MonoBehaviour
         anim.SetBool("Attack1", false);
         anim.SetBool("Attack2", false);
         anim.SetBool("Attack3", false);
-        attack_flag = false;
-        attack1_flag = false;
-        attack2_flag = false;
-        attack3_flag = false;
-        stiffness_flag = false;
-        underattack_flag = false;
-        attack_time = 0;
+        isAttack = false;
+        isAttack1 = false;
+        isAttack2 = false;
+        isAttack3 = false;
+        isStiffness = false;
+        isUnderAttack = false;
+        attackTime = 0;
         Varis_Normal.SetActive(true);
         Varis_FullPower.SetActive(false);
         MVS_R.SetActive(false);
@@ -1002,10 +1002,10 @@ public class Cpu_Control : MonoBehaviour
         Varis_Normal.SetActive(true);
         Varis_FullPower.SetActive(false);
         anim.SetBool("SubShooting_FightingVariants", false);
-        subshooting_fightingvariants_flag = false;
-        stiffness_flag = false;
+        isSubShootingFightingVariants = false;
+        isStiffness = false;
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
-        underattack_flag = false;
+        isUnderAttack = false;
         rb.useGravity = true;
         Leg_R.transform.GetComponent<BoxCollider>().enabled = false;
     }
@@ -1014,46 +1014,46 @@ public class Cpu_Control : MonoBehaviour
     void SpecialAttackControls()
     {
         Vector3 specialattack_direction;
-        if (!incapableofaction_flag && !underattack_flag)
+        if (!isIncapableAction && !isUnderAttack)
         {
-            if (cpu_specialfighting && !landing_flag)
+            if (cpu_specialfighting && !isLanding)
             {
                 anim.SetBool("SpecialAttack", true);
-                specialattack_flag = true;
-                specialattack_time = 0;
+                isSpecialAttack = true;
+                specialAttackTime = 0;
                 boost_amount -= 10;
-                stiffness_flag = true;
-                underattack_flag = true;
+                isStiffness = true;
+                isUnderAttack = true;
                 Varis_Normal.SetActive(false);
                 Varis_FullPower.SetActive(false);
 
-                boost_flag = false;
+                isBoost = false;
                 anim.SetBool("Boost_Landing", false);
 
-                if (induction_flag && LockOnEnemy != null)
+                if (isInduction && LockOnEnemy != null)
                 {
                     gameObject.transform.LookAt(LockOnEnemy.transform);
                 }
                 lastmove_name = "specialattack";
                 specialattack_direction = gameObject.transform.forward * 1;
                 specialattack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-                specialattack_moving = specialattack_direction * boost_speed * 1.2f;
+                specialattack_moving = specialattack_direction * BOOST_SPEED * 1.2f;
             }
         }
 
-        if (specialattack_flag)
+        if (isSpecialAttack)
         {
-            specialattack_time += Time.deltaTime;
-            if (specialattack_time <= 0.4f)
+            specialAttackTime += Time.deltaTime;
+            if (specialAttackTime <= 0.4f)
             {
                 rb.velocity = new Vector3(specialattack_moving.x, rb.velocity.y, specialattack_moving.z);
             }
-            if (specialattack_time >= 1.2f)
+            if (specialAttackTime >= 1.2f)
             {
                 Varis_Normal.SetActive(true);
                 Varis_FullPower.SetActive(false);
                 SpecialAttackFinish();
-                underattack_flag = false;
+                isUnderAttack = false;
             }
         }
     }
@@ -1062,27 +1062,27 @@ public class Cpu_Control : MonoBehaviour
     void SpecialAttackFinish()
     {
         anim.SetBool("SpecialAttack", false);
-        specialattack_flag = false;
-        stiffness_flag = false;
+        isSpecialAttack = false;
+        isStiffness = false;
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
 
     //��������
     void InertiaControl()
     {
-        if (air_flag && !boost_flag)
+        if (isAir && !isBoost)
         {
-            if (lastmove_name == "jump" && !leverinsert_flag)
+            if (lastmove_name == "jump" && !isLeverInsert)
             {
                 rb.velocity = new Vector3(inertia_direction.x * 20, rb.velocity.y, inertia_direction.y * 20);
             }
             if (lastmove_name == "boost")
             {
-                rb.velocity = new Vector3(inertia_direction.x * boost_speed, rb.velocity.y, inertia_direction.y * boost_speed);
+                rb.velocity = new Vector3(inertia_direction.x * BOOST_SPEED, rb.velocity.y, inertia_direction.y * BOOST_SPEED);
             }
-            if (lastmove_name == "specialattack" && !specialattack_flag)
+            if (lastmove_name == "specialattack" && !isSpecialAttack)
             {
-                rb.velocity = new Vector3(inertia_direction.x * boost_speed * 2, rb.velocity.y, inertia_direction.y * boost_speed * 1.2f);
+                rb.velocity = new Vector3(inertia_direction.x * BOOST_SPEED * 2, rb.velocity.y, inertia_direction.y * BOOST_SPEED * 1.2f);
             }
         }
     }
@@ -1102,20 +1102,20 @@ public class Cpu_Control : MonoBehaviour
     //��낯
     void Stagger_Control()
     {
-        if (stagger_flag || down_flag)
+        if (isStagger || isDown)
         {
-            if (!down_flag || !air_flag)
+            if (!isDown || !isAir)
             {
-                stagger_time += Time.deltaTime;
+                staggerTime += Time.deltaTime;
             }
-            if (stagger_time >= 0.2f)
+            if (staggerTime >= 0.2f)
             {
                 anim.SetBool("Stagger_Start", false);
             }
-            if (stagger_time <= 0.2f)
+            if (staggerTime <= 0.2f)
             {
                 Vector3 stagger_move;
-                if (down_flag)
+                if (isDown)
                 {
                     stagger_move = other_forward * 0.5f;
                 }
@@ -1125,33 +1125,33 @@ public class Cpu_Control : MonoBehaviour
                 }
                 rb.velocity = new Vector3(stagger_move.x, rb.velocity.y, stagger_move.z);
             }
-            if (stagger_time >= 1.0f && !down_flag)
+            if (staggerTime >= 1.0f && !isDown)
             {
-                incapableofaction_flag = false;
-                stagger_flag = false;
-                stiffness_flag = false;
+                isIncapableAction = false;
+                isStagger = false;
+                isStiffness = false;
                 anim.SetBool("StaggerFront_Landing", false);
                 anim.SetBool("StaggerBack_Landing", false);
-                stagger_time = 0;
+                staggerTime = 0;
             }
-            else if (stagger_time >= 1f && stagger_time < 2f && down_flag)
+            else if (staggerTime >= 1f && staggerTime < 2f && isDown)
             {
                 anim.SetBool("GetUp", true);
                 anim.SetBool("DownFront", false);
                 anim.SetBool("DownBack", false);
             }
-            else if (stagger_time >= 2f && down_flag)
+            else if (staggerTime >= 2f && isDown)
             {
-                incapableofaction_flag = false;
-                stagger_flag = false;
-                stiffness_flag = false;
-                down_flag = false;
+                isIncapableAction = false;
+                isStagger = false;
+                isStiffness = false;
+                isDown = false;
                 anim.SetBool("StaggerFront_Landing", false);
                 anim.SetBool("StaggerBack_Landing", false);
                 anim.SetBool("DownFront", false);
                 anim.SetBool("DownBack", false);
                 anim.SetBool("GetUp", false);
-                stagger_time = 0;
+                staggerTime = 0;
             }
         }
     }
@@ -1162,24 +1162,24 @@ public class Cpu_Control : MonoBehaviour
         {
             anim.SetBool("Jump", false);
             anim.SetBool("Air", false);
-            jump_flag = false;
-            if (!boost_flag)
+            isJump = false;
+            if (!isBoost)
             {
-                landing_flag = true;
-                boost_amount = boost_maxamount;
-                incapableofaction_flag = false;
+                isLanding = true;
+                boost_amount = BOOST_MAX;
+                isIncapableAction = false;
             }
-            air_flag = false;
+            isAir = false;
             inertia_direction = new Vector3(0, 0, 0);
 
-            if (down_flag)
+            if (isDown)
             {
                 transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
             }
         }
         if (other.gameObject.CompareTag("Player"))
         {
-            if (subshooting_fightingvariants_flag)
+            if (isSubShootingFightingVariants)
             {
                 SubShootingFightingVariantsFinish();
             }
@@ -1190,13 +1190,13 @@ public class Cpu_Control : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (attack_flag)
+            if (isAttack)
             {
-                if (attack_time < 0.8f && (!attack1_flag && !attack2_flag && !attack3_flag))
+                if (attackTime < 0.8f && (!isAttack1 && !isAttack2 && !isAttack3))
                 {
-                    attack_time = 0;
-                    attackfinish_time = 1.0f;
-                    attack1_flag = true;
+                    attackTime = 0;
+                    attackFinishTime = 1.0f;
+                    isAttack1 = true;
                     anim.SetBool("Attack_Induction", false);
                     anim.SetBool("Attack1", true);
                     Rigidity();
@@ -1206,9 +1206,9 @@ public class Cpu_Control : MonoBehaviour
 
         if (other.gameObject.CompareTag("Ground"))
         {
-            if (!step_flag && !jump_flag && !boost_flag && !slide_flag && !down_flag && !stagger_flag)
+            if (!isStep && !isJump && !isBoost && !isSlide && !isDown && !isStagger)
             {
-                incapableofaction_flag = false;
+                isIncapableAction = false;
             }
         }
     }
@@ -1218,7 +1218,7 @@ public class Cpu_Control : MonoBehaviour
         if (other.gameObject.CompareTag("Ground"))
         {
             anim.SetBool("Air", true);
-            air_flag = true;
+            isAir = true;
         }
     }
 
@@ -1229,7 +1229,7 @@ public class Cpu_Control : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (!hitstart_stay_flag)
+        if (!isHitStartStay)
         {
             Hit_Control(other);
         }
@@ -1243,7 +1243,7 @@ public class Cpu_Control : MonoBehaviour
             {
                 if (other.gameObject.CompareTag("Bullet") || other.gameObject.CompareTag("Untagged"))
                 {
-                    hitstart_stay_flag = false;
+                    isHitStartStay = false;
                 }
             }
         }
@@ -1255,13 +1255,13 @@ public class Cpu_Control : MonoBehaviour
         {
             if (other.gameObject.GetComponent<Beam_Control>().OwnMachine != gameObject)
             {
-                if (!down_flag)
+                if (!isDown)
                 {
                     if (other.gameObject.CompareTag("Bullet") || other.gameObject.CompareTag("Untagged"))
                     {
                         other_forward = other.transform.position;
                         //�K�[�h����
-                        if (defense_flag && Vector3.Angle(transform.forward, other.gameObject.transform.forward) >= 90)
+                        if (isDefense && Vector3.Angle(transform.forward, other.gameObject.transform.forward) >= 90)
                         {
                             Transform other_transform = other.transform;
                             other_transform.position = other_transform.forward * -2;
@@ -1270,7 +1270,7 @@ public class Cpu_Control : MonoBehaviour
                         }
                         else
                         {
-                            hitstart_stay_flag = true;
+                            isHitStartStay = true;
                             BoostFinish();
                             MainShootingFinish();
                             SubShootingFinish();
@@ -1278,19 +1278,19 @@ public class Cpu_Control : MonoBehaviour
                             SpecialShootingFinish();
                             AttackFinish();
                             SpecialAttackFinish();
-                            durable_value -= Mathf.CeilToInt(other.gameObject.GetComponent<Beam_Control>().power * correctionfactor);
-                            correctionfactor -= other.gameObject.GetComponent<Beam_Control>().correctionfactor;
-                            correctionfactor_resettime = 0f;
-                            if (correctionfactor < 0.1f)
+                            durable_value -= Mathf.CeilToInt(other.gameObject.GetComponent<Beam_Control>().power * correctionFactor);
+                            correctionFactor -= other.gameObject.GetComponent<Beam_Control>().correctionFactor;
+                            correctionFactorResetTime = 0f;
+                            if (correctionFactor < 0.1f)
                             {
-                                correctionfactor = 0.1f;
+                                correctionFactor = 0.1f;
                             }
-                            down_value += other.gameObject.GetComponent<Beam_Control>().down_value;
-                            if (down_value >= 6)
+                            downValue += other.gameObject.GetComponent<Beam_Control>().downValue;
+                            if (downValue >= 6)
                             {
-                                down_flag = true;
-                                incapableofaction_flag = true;
-                                stiffness_flag = true;
+                                isDown = true;
+                                isIncapableAction = true;
+                                isStiffness = true;
                                 Vector3 hitPos = other.ClosestPointOnBounds(this.transform.position);
                                 if (other.gameObject.CompareTag("Bullet"))
                                 {
@@ -1314,19 +1314,19 @@ public class Cpu_Control : MonoBehaviour
                                         anim.SetBool("DownFront", true);
                                     }
                                 }
-                                stagger_time = 0;
-                                correctionfactor_resettime = 0;
-                                down_value = 0;
-                                if (air_flag)
+                                staggerTime = 0;
+                                correctionFactorResetTime = 0;
+                                downValue = 0;
+                                if (isAir)
                                 {
                                     transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 180);
                                 }
                             }
                             else
                             {
-                                stagger_flag = true;
-                                incapableofaction_flag = true;
-                                stiffness_flag = true;
+                                isStagger = true;
+                                isIncapableAction = true;
+                                isStiffness = true;
                                 Vector3 hitPos = other.ClosestPointOnBounds(this.transform.position);
                                 if (other.gameObject.CompareTag("Bullet"))
                                 {
@@ -1351,7 +1351,7 @@ public class Cpu_Control : MonoBehaviour
                                     }
                                 }
                                 anim.SetBool("Stagger_Start", true);
-                                stagger_time = 0;
+                                staggerTime = 0;
                             }
                         }
                     }

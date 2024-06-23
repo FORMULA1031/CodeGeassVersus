@@ -9,97 +9,108 @@ using UnityEngine.InputSystem;
 
 public class KMF_Control : MonoBehaviour
 {
+    /***********
+        定数
+    ***********/
+    const float WALK_SPEED   = 15;
+    const float BOOST_SPEED  = 60;
+    const float JUMP_POWER   = 80;
+    const int BOOST_MAX      = 100;
+    /*********************
+        時間管理用変数
+    *********************/
+    float jumpRugTime = 0;
+    float landingTime = 0;
+    float boostButtonTime = 0;
+    float boostConsumedTime = 0;
+    float slideTime = 0;
+    float mainShootingTime = 0;
+    public float mainShootingCurrentReloadTime = 0;
+    public float mainShootingReloadTime;
+    float subShootingTime = 0;
+    public float subShootingCurrentReloadTime = 0;
+    public float subShootingReloadTime;
+    float subShootingFightingVariantsTime = 0;
+    float specialShootingTime = 0;
+    public float specialShootingCurrentReloadTime = 0;
+    public float specialShootingReloadTime;
+    float attackTime = 0;
+    float attackFinishTime = 1.8f;
+    float specialAttackTime = 0;
+    public float fightingChargeTime = 0;
+    public float fightingChargeMaxTime;
+    public float fightingChargeCurrentReloadTime = 0;
+    public float fightingChargeReloadTime;
+    public float floatUnitCurrentTime = 0;
+    public float floatUnitTime;
+    float replacementTime = 0;
+    float floatUnitPresentLocation;
+    float staggerTime = 0;
+    float correctionFactor = 1;
+    float correctionFactorResetTime = 0;
+    float downValue = 0;
+    float leverFrontTime = 0;
+    float leverBackTime = 0;
+    float leverRightTime = 0;
+    float leverLeftTime = 0;
+    float defenseTime = 0;
+    float defenseLeverTime = 0;
+    float defendingTime = 0;
+    float stepTime = 0;
+    /*********************
+        フラグ用変数
+    *********************/
+    public bool isFightingChargeInput = false;
+    public bool isFloatUnit = false;
+    public bool isInductionOff = false;
+    public bool isDown = false;
+    public bool isTypeGroundRunning;
+    bool isJump = false;
+    bool isJumpMove = false;
+    bool isRise = false;
+    bool isLeverInsert = false;
+    bool isLeverFront = false;
+    bool isLeverBack = false;
+    bool isLeverRight = false;
+    bool isLeverLeft = false;
+    bool isLanding = false;
+    bool isAir = false;
+    bool isBoost = false;
+    bool isSlide = false;
+    bool isStiffness = false;
+    bool isIncapableAction = false;
+    bool isMainShooting = false;
+    bool isMainShootingFiring = false;
+    bool isSubShooting = false;
+    bool isSubShootingFiring = false;
+    bool isSubShootingFightingVariants = false;
+    bool isSubShootingFightingVariantsInAir = false;
+    bool isAttack = false;
+    bool isAttack1 = false;
+    bool isAttack2 = false;
+    bool isAttack3 = false;
+    bool isSpecialShooting = false;
+    bool isSpecialShootingAnimation = false;
+    bool isSpecialShootingFiring = false;
+    bool isReplacement = false;
+    bool isInduction = true;
+    bool isStagger = false;
+    bool isUnderAttack = false;
+    bool isDefense = false;
+    bool isDefending = false;
+    bool isStep = false;
+    bool isStepJump = false;
+    bool isJumpKeyPressing = false;
+    bool isHitStartStay = false;
+    bool isSpecialAttack = false;
+
     Rigidbody rb;
     PhotonView pv;
     public float boost_amount;
-    float walk_speed = 15;
-    float boost_speed = 60;
-    float jump_power = 80;
-    float jumprug_time = 0;
-    float landing_time = 0;
-    float BoostButtonTime = 0;
-    float boostconsumed_time = 0;
-    float slide_time = 0;
-    float mainshooting_time = 0;
-    public float mainshooting_currentreloadtime = 0;
-    public float mainshooting_reloadtime;
-    float subshooting_time = 0;
-    public float subshooting_currentreloadtime = 0;
-    public float subshooting_reloadtime;
-    float subShooting_fightingvariants_time = 0;
-    float specialshooting_time = 0;
-    public float specialshooting_currentreloadtime = 0;
-    public float specialshooting_reloadtime;
-    float attack_time = 0;
-    float attackfinish_time = 1.8f;
-    float specialattack_time = 0;
-    public float fightingcharge_time = 0;
-    public float fightingcharge_maxtime;
-    public float fightingcharge_currentreloadtime = 0;
-    public float fightingcharge_reloadtime;
-    public float floatunit_currenttime = 0;
-    public float floatunit_time;
-    float replacement_time = 0;
-    float floatunit_presentlocation;
-    float stagger_time = 0;
-    float correctionfactor = 1;
-    float correctionfactor_resettime = 0;
-    float down_value = 0;
-    float leverfront_time = 0;
-    float leverback_time = 0;
-    float leverright_time = 0;
-    float leverleft_time = 0;
-    float defense_time = 0;
-    float defenselever_time = 0;
-    float defenseing_time = 0;
-    float step_time = 0;
-    bool jump_flag = false;
-    bool jumpmove_flag = false;
-    bool rise_flag = false;
-    bool leverinsert_flag = false;
-    bool leverfront_flag = false;
-    bool leverback_flag = false;
-    bool leverright_flag = false;
-    bool leverleft_flag = false;
-    bool landing_flag = false;
-    bool air_flag = false;
-    bool boost_flag = false;
-    bool slide_flag = false;
-    bool stiffness_flag = false;
-    bool incapableofaction_flag = false;
-    bool mainshooting_flag = false;
-    bool mainshootingfiring_flag = false;
-    bool subshooting_flag = false;
-    bool subshootingfiring_flag = false;
-    bool subshooting_fightingvariants_flag = false;
-    bool isinair_subshooting_fightingvariants_flag = false;
-    bool attack_flag = false;
-    bool attack1_flag = false;
-    bool attack2_flag = false;
-    bool attack3_flag = false;
-    bool specialshooting_flag = false;
-    bool specialshootinganimation_flag = false;
-    bool specialshootingfiring_flag = false;
-    public bool fightingchargeinput_flag = false;
-    public bool floatunit_flag = false;
-    bool replacement_flag = false;
-    bool induction_flag = true;
-    public bool inductionoff_flag = false;
-    bool stagger_flag = false;
-    public bool down_flag = false;
-    bool underattack_flag = false;
-    bool defense_flag = false;
-    bool defenseing_flag = false;
-    bool step_flag = false;
-    bool stepjump_flag = false;
-    bool jumpkey_pressing = false;
-    bool hitstart_stay_flag = false;
-    public bool type_groundrunnig;
+    
     public int durable_value;
     public int durable_maxvalue;
-    int boost_maxamount = 100;
     public int mainshooting_number;
-    bool specialattack_flag = false;
     public int mainshooting_maxnumber;
     public int subshooting_number;
     public int subshooting_maxnumber;
@@ -151,7 +162,7 @@ public class KMF_Control : MonoBehaviour
         subshooting_maxnumber = subshooting_number;
         specialshooting_maxnumber = specialshooting_number;
         durable_value = durable_maxvalue;
-        boost_amount = boost_maxamount;
+        boost_amount = BOOST_MAX;
         Eff_SpeedLine = transform.Find("Eff_SpeedLine").gameObject;
         Eff_StepLine = transform.Find("Eff_StepLine").gameObject;
         Eff_SpeedLine.SetActive(false);
@@ -190,23 +201,23 @@ public class KMF_Control : MonoBehaviour
 
         if (boost_amount <= 0)
         {
-            incapableofaction_flag = true;
+            isIncapableAction = true;
         }
-        if (correctionfactor < 1)
+        if (correctionFactor < 1)
         {
-            correctionfactor_resettime += Time.deltaTime;
-            if (correctionfactor_resettime >= 3f)
+            correctionFactorResetTime += Time.deltaTime;
+            if (correctionFactorResetTime >= 3f)
             {
-                correctionfactor = 1;
-                down_value = 0;
+                correctionFactor = 1;
+                downValue = 0;
             }
         }
 
-        if (!(defense_flag || subshooting_fightingvariants_flag) && !rb.useGravity)
+        if (!(isDefense || isSubShootingFightingVariants) && !rb.useGravity)
         {
             rb.useGravity = true;
         }
-        if (!down_flag && !stagger_flag)
+        if (!isDown && !isStagger)
         {
             MoveKeyControls();
             JumpKeyControls();
@@ -230,7 +241,7 @@ public class KMF_Control : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "TrainingScene")
         {
             RpcEffControl();
-            if (!boost_flag)
+            if (!isBoost)
             {
                 RpcEffControl_NotBoostFlag();
             }
@@ -238,7 +249,7 @@ public class KMF_Control : MonoBehaviour
         else
         {
             pv.RPC(nameof(RpcEffControl), RpcTarget.AllBufferedViaServer);
-            if (!boost_flag)
+            if (!isBoost)
             {
                 pv.RPC(nameof(RpcEffControl_NotBoostFlag), RpcTarget.AllBufferedViaServer);
             }
@@ -277,15 +288,15 @@ public class KMF_Control : MonoBehaviour
 
     void FixedUpdateControl()
     {
-        if (!stiffness_flag)
+        if (!isStiffness)
         {
-            if (!incapableofaction_flag)
+            if (!isIncapableAction)
             {
-                if (!landing_flag && !slide_flag)
+                if (!isLanding && !isSlide)
                 {
-                    if (leverinsert_flag && !defense_flag && lastmove_name != "jump")
+                    if (isLeverInsert && !isDefense && lastmove_name != "jump")
                     {
-                        if (type_groundrunnig || !boost_flag)
+                        if (isTypeGroundRunning || !isBoost)
                         {
                             rb.velocity = new Vector3(movingvelocity.x, rb.velocity.y, movingvelocity.z);
                         }
@@ -327,7 +338,7 @@ public class KMF_Control : MonoBehaviour
                         }
                     }
                 }
-                else if (slide_flag)
+                else if (isSlide)
                 {
                     if (SceneManager.GetActiveScene().name == "TrainingScene")
                     {
@@ -343,10 +354,10 @@ public class KMF_Control : MonoBehaviour
         }
         else
         {
-            if (down_flag || specialattack_flag || subshooting_fightingvariants_flag || attack_flag)
+            if (isDown || isSpecialAttack || isSubShootingFightingVariants || isAttack)
             {
             }
-            else if (step_flag || stagger_flag)
+            else if (isStep || isStagger)
             {
                 GravityOff();
                 if (SceneManager.GetActiveScene().name == "TrainingScene")
@@ -373,24 +384,24 @@ public class KMF_Control : MonoBehaviour
         movingdirection = MainCamera.transform.forward * z + MainCamera.transform.right * x;
         if(x != 0 || z != 0)
         {
-            leverinsert_flag = true;
+            isLeverInsert = true;
             anim.SetBool("Walk", true);
         }
         else
         {
-            leverinsert_flag = false;
+            isLeverInsert = false;
             lastlever_name = "null";
             anim.SetBool("Walk", false);
         }
         movingdirection.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-        if (!boost_flag && !slide_flag)
+        if (!isBoost && !isSlide)
         {
             Vector3 boost_direction;
             boost_direction = transform.forward;
             boost_direction.Normalize();
-            movingvelocity = boost_direction * walk_speed;
+            movingvelocity = boost_direction * WALK_SPEED;
         }
-        if (!landing_flag)
+        if (!isLanding)
         {
             DefenseAndStepControl(x, z);
         }
@@ -406,11 +417,11 @@ public class KMF_Control : MonoBehaviour
                 //�E����
                 if (x > 0)
                 {
-                    if (lastlever_name == "null" && leverright_flag && leverright_time < 0.2f && !step_flag)
+                    if (lastlever_name == "null" && isLeverRight && leverRightTime < 0.2f && !isStep)
                     {
-                        if ((!underattack_flag || lastmove_name == "mainshooting" || lastmove_name == "attack" || slide_flag) && boost_amount > 0)
+                        if ((!isUnderAttack || lastmove_name == "mainshooting" || lastmove_name == "attack" || isSlide) && boost_amount > 0)
                         {
-                            step_move = MainCamera.transform.right * walk_speed;
+                            step_move = MainCamera.transform.right * WALK_SPEED;
                             if (SceneManager.GetActiveScene().name == "TrainingScene")
                             {
                                 Eff_StepLine.transform.localEulerAngles = new Vector3(0, MainCamera.transform.eulerAngles.y - transform.eulerAngles.y + 90, 0);
@@ -424,20 +435,20 @@ public class KMF_Control : MonoBehaviour
                         }
                     }
                     lastlever_name = "right";
-                    leverright_time = 0;
-                    leverright_flag = true;
-                    leverfront_flag = false;
-                    leverback_flag = false;
-                    leverleft_flag = false;
+                    leverRightTime = 0;
+                    isLeverRight = true;
+                    isLeverFront = false;
+                    isLeverBack = false;
+                    isLeverLeft = false;
                 }
                 //������
                 else if (x < 0)
                 {
-                    if (lastlever_name == "null" && leverleft_flag && leverleft_time < 0.2f && !step_flag)
+                    if (lastlever_name == "null" && isLeverLeft && leverLeftTime < 0.2f && !isStep)
                     {
-                        if ((!underattack_flag || lastmove_name == "mainshooting" || lastmove_name == "attack" || slide_flag) && boost_amount > 0)
+                        if ((!isUnderAttack || lastmove_name == "mainshooting" || lastmove_name == "attack" || isSlide) && boost_amount > 0)
                         {
-                            step_move = MainCamera.transform.right * -walk_speed;
+                            step_move = MainCamera.transform.right * -WALK_SPEED;
                             if (SceneManager.GetActiveScene().name == "TrainingScene")
                             {
                                 Eff_StepLine.transform.localEulerAngles = new Vector3(0, MainCamera.transform.eulerAngles.y - transform.eulerAngles.y - 90, 0);
@@ -451,32 +462,32 @@ public class KMF_Control : MonoBehaviour
                         }
                     }
                     lastlever_name = "left";
-                    leverleft_time = 0;
-                    leverleft_flag = true;
-                    leverfront_flag = false;
-                    leverback_flag = false;
-                    leverright_flag = false;
+                    leverLeftTime = 0;
+                    isLeverLeft = true;
+                    isLeverFront = false;
+                    isLeverBack = false;
+                    isLeverRight = false;
                 }
-                defenselever_time = 2f;
+                defenseLeverTime = 2f;
             }
             else
             {
                 //�O����
                 if (z > 0)
                 {
-                    if (leverback_flag && !underattack_flag)
+                    if (isLeverBack && !isUnderAttack)
                     {
-                        if (!defense_flag && !underattack_flag)
+                        if (!isDefense && !isUnderAttack)
                         {
                             Vector3 direction;
-                            defense_flag = true;
-                            defense_time = 0;
-                            defenselever_time = 0;
-                            boostconsumed_time = 0;
-                            stiffness_flag = true;
+                            isDefense = true;
+                            defenseTime = 0;
+                            defenseLeverTime = 0;
+                            boostConsumedTime = 0;
+                            isStiffness = true;
                             rb.useGravity = false;
-                            underattack_flag = true;
-                            boost_flag = false;
+                            isUnderAttack = true;
+                            isBoost = false;
                             anim.SetBool("Boost_Landing", false);
                             if (SceneManager.GetActiveScene().name == "TrainingScene")
                             {
@@ -497,13 +508,13 @@ public class KMF_Control : MonoBehaviour
                             transform.eulerAngles = direction;
                         }
                     }
-                    defenselever_time += Time.deltaTime;
+                    defenseLeverTime += Time.deltaTime;
 
-                    if (lastlever_name == "null" && leverfront_flag && leverfront_time < 0.2f && !step_flag)
+                    if (lastlever_name == "null" && isLeverFront && leverFrontTime < 0.2f && !isStep)
                     {
-                        if ((!underattack_flag || lastmove_name == "mainshooting" || lastmove_name == "attack" || slide_flag) && boost_amount > 0)
+                        if ((!isUnderAttack || lastmove_name == "mainshooting" || lastmove_name == "attack" || isSlide) && boost_amount > 0)
                         {
-                            step_move = MainCamera.transform.forward * walk_speed;
+                            step_move = MainCamera.transform.forward * WALK_SPEED;
                             if (SceneManager.GetActiveScene().name == "TrainingScene")
                             {
                                 Eff_StepLine.transform.localEulerAngles = new Vector3(0, MainCamera.transform.eulerAngles.y - transform.eulerAngles.y, 0);
@@ -517,20 +528,20 @@ public class KMF_Control : MonoBehaviour
                         }
                     }
                     lastlever_name = "front";
-                    leverfront_time = 0;
-                    leverfront_flag = true;
-                    leverback_flag = false;
-                    leverleft_flag = false;
-                    leverright_flag = false;
+                    leverFrontTime = 0;
+                    isLeverFront = true;
+                    isLeverBack = false;
+                    isLeverLeft = false;
+                    isLeverRight = false;
                 }
                 //������
                 else if (z < 0)
                 {
-                    if(lastlever_name == "null" && leverback_flag && leverback_time < 0.2f && !step_flag)
+                    if(lastlever_name == "null" && isLeverBack && leverBackTime < 0.2f && !isStep)
                     {
-                        if ((!underattack_flag || lastmove_name == "mainshooting" || lastmove_name == "attack" || slide_flag) && boost_amount > 0)
+                        if ((!isUnderAttack || lastmove_name == "mainshooting" || lastmove_name == "attack" || isSlide) && boost_amount > 0)
                         {
-                            step_move = MainCamera.transform.forward * -walk_speed;
+                            step_move = MainCamera.transform.forward * -WALK_SPEED;
                             if (SceneManager.GetActiveScene().name == "TrainingScene")
                             {
                                 Eff_StepLine.transform.localEulerAngles = new Vector3(0, MainCamera.transform.eulerAngles.y - transform.eulerAngles.y + 180, 0);
@@ -544,115 +555,115 @@ public class KMF_Control : MonoBehaviour
                         }
                     }
                     lastlever_name = "back";
-                    leverback_time = 0;
-                    leverback_flag = true;
-                    leverfront_flag = false;
-                    leverleft_flag = false;
-                    leverright_flag = false;
-                    defenselever_time = 2f;
+                    leverBackTime = 0;
+                    isLeverBack = true;
+                    isLeverFront = false;
+                    isLeverLeft = false;
+                    isLeverRight = false;
+                    defenseLeverTime = 2f;
                 }
             }
         }
         else
         {
-            defenselever_time = 2f;
+            defenseLeverTime = 2f;
         }
 
         //�X�e�b�v��t����
-        if (leverfront_flag || lastlever_name == "front")
+        if (isLeverFront || lastlever_name == "front")
         {
-            leverfront_time += Time.deltaTime;
-            if (leverfront_time >= 0.2f)
+            leverFrontTime += Time.deltaTime;
+            if (leverFrontTime >= 0.2f)
             {
-                leverfront_flag = false;
+                isLeverFront = false;
             }
         }
-        if (leverback_flag || lastlever_name == "back")
+        if (isLeverBack || lastlever_name == "back")
         {
-            leverback_time += Time.deltaTime;
-            if (leverback_time >= 0.2f)
+            leverBackTime += Time.deltaTime;
+            if (leverBackTime >= 0.2f)
             {
-                leverback_flag = false;
+                isLeverBack = false;
             }
         }
-        if (leverright_flag || lastlever_name == "right")
+        if (isLeverRight || lastlever_name == "right")
         {
-            leverright_time += Time.deltaTime;
-            if (leverright_time >= 0.2f)
+            leverRightTime += Time.deltaTime;
+            if (leverRightTime >= 0.2f)
             {
-                leverright_flag = false;
+                isLeverRight = false;
             }
         }
-        if (leverleft_flag || lastlever_name == "left")
+        if (isLeverLeft || lastlever_name == "left")
         {
-            leverleft_time += Time.deltaTime;
-            if(leverleft_time >= 0.2f)
+            leverLeftTime += Time.deltaTime;
+            if(leverLeftTime >= 0.2f)
             {
-                leverleft_flag = false;
+                isLeverLeft = false;
             }
         }
 
         //�K�[�h��
-        if (defense_flag)
+        if (isDefense)
         {
             anim.SetBool("Defense", true);
             
-            if ((defenselever_time >= 2f && !defenseing_flag) || incapableofaction_flag)
+            if ((defenseLeverTime >= 2f && !isDefending) || isIncapableAction)
             {
-                defense_time += Time.deltaTime;
+                defenseTime += Time.deltaTime;
             }
 
             //�K�[�h�I��
-            if (defense_time >= 0.5f)
+            if (defenseTime >= 0.5f)
             {
                 DefenseFinish();
             }
 
             //�u�[�X�g����
-            boostconsumed_time += Time.deltaTime;
-            if(boostconsumed_time > 0.01f)
+            boostConsumedTime += Time.deltaTime;
+            if(boostConsumedTime > 0.01f)
             {
                 boost_amount -= 0.1f;
-                boostconsumed_time = 0;
+                boostConsumedTime = 0;
             }
         }
 
-        if (defenseing_flag)
+        if (isDefending)
         {
             //����
-            stiffness_flag = false;
-            defenseing_time += Time.deltaTime;
-            if(defenseing_time <= 0.2f)
+            isStiffness = false;
+            defendingTime += Time.deltaTime;
+            if(defendingTime <= 0.2f)
             {
                 rb.velocity = new Vector3(defenserecoil.x, defenserecoil.y, defenserecoil.z);
             }
             else
             {
-                stiffness_flag = true;
+                isStiffness = true;
             }
-            if(defenseing_time >= 0.5f)
+            if(defendingTime >= 0.5f)
             {
-                defenseing_flag = false;
-                defenseing_time = 0;
+                isDefending = false;
+                defendingTime = 0;
             }
         }
 
         //�X�e�b�v����
-        if (step_flag)
+        if (isStep)
         {
-            if (slide_flag)
+            if (isSlide)
             {
                 SlideFinish();
             }
 
-            step_time += Time.deltaTime;
-            if(step_time < 0.1)
+            stepTime += Time.deltaTime;
+            if(stepTime < 0.1)
             {
-                inductionoff_flag = true;
+                isInductionOff = true;
             }
-            if (step_time >= 0.05f)
+            if (stepTime >= 0.05f)
             {
-                inductionoff_flag = false;
+                isInductionOff = false;
                 if (anim.GetBool("Step_Front"))
                 {
                     anim.SetBool("Step_Back", false);
@@ -679,11 +690,11 @@ public class KMF_Control : MonoBehaviour
                 }
                 rb.velocity = step_move;
             }
-            if(step_time >= 0.3f)
+            if(stepTime >= 0.3f)
             {
-                if (!air_flag)
+                if (!isAir)
                 {
-                    boost_amount = boost_maxamount;
+                    boost_amount = BOOST_MAX;
                 }
                 StepFinish();
             }
@@ -693,10 +704,10 @@ public class KMF_Control : MonoBehaviour
 
     void DefenseFinish()
     {
-        defense_flag = false;
+        isDefense = false;
         anim.SetBool("Defense", false);
-        stiffness_flag = false;
-        underattack_flag = false;
+        isStiffness = false;
+        isUnderAttack = false;
         rb.useGravity = true;
         if (SceneManager.GetActiveScene().name == "TrainingScene")
         {
@@ -763,10 +774,10 @@ public class KMF_Control : MonoBehaviour
 
         AttackFinish();
         BoostFinish();
-        stiffness_flag = true;
-        step_flag = true;
-        inductionoff_flag = true;
-        step_time = 0;
+        isStiffness = true;
+        isStep = true;
+        isInductionOff = true;
+        stepTime = 0;
         boost_amount -= 20;
         if (SceneManager.GetActiveScene().name == "TrainingScene")
         {
@@ -781,19 +792,19 @@ public class KMF_Control : MonoBehaviour
     void StepAnimationSelect(string stepfront, string stepback, string stepright, string stepleft)
     {
 
-        if (leverfront_flag)
+        if (isLeverFront)
         {
             anim.SetBool(stepfront, true);
         }
-        if (leverback_flag)
+        if (isLeverBack)
         {
             anim.SetBool(stepback, true);
         }
-        if (leverright_flag)
+        if (isLeverRight)
         {
             anim.SetBool(stepright, true);
         }
-        if (leverleft_flag)
+        if (isLeverLeft)
         {
             anim.SetBool(stepleft, true);
         }
@@ -802,10 +813,10 @@ public class KMF_Control : MonoBehaviour
     //�X�e�b�v�I��
     void StepFinish()
     {
-        inductionoff_flag = false;
-        stiffness_flag = false;
-        step_flag = false;
-        step_time = 0;
+        isInductionOff = false;
+        isStiffness = false;
+        isStep = false;
+        stepTime = 0;
         lastmove_name = "null";
         if (SceneManager.GetActiveScene().name == "TrainingScene")
         {
@@ -823,18 +834,18 @@ public class KMF_Control : MonoBehaviour
 
     void KMF_Rotation()
     {
-        if (leverinsert_flag)
+        if (isLeverInsert)
         {
             Vector3 diff = transform.position - new Vector3(latestPos.x, transform.position.y, latestPos.z);   //�O�񂩂�ǂ��ɐi�񂾂����x�N�g���Ŏ擾
             latestPos = transform.position;  //�O���Position�̍X�V
             if (diff != Vector3.zero)
             {
                 float turning_angle = 0.1f;
-                if(boost_flag)
+                if(isBoost)
                 {
                     turning_angle = 0.02f;
                 }
-                else if (air_flag)
+                else if (isAir)
                 {
                     turning_angle = 0;
                 }
@@ -847,7 +858,7 @@ public class KMF_Control : MonoBehaviour
     //�W�����v���u�[�X�g�J�n���̕����]��
     void KMF_RapidRotation()
     {
-        if (leverinsert_flag)
+        if (isLeverInsert)
         {
             float x = Input.GetAxis("Move_X");
             float z = Input.GetAxis("Move_Y") * -1;
@@ -909,25 +920,25 @@ public class KMF_Control : MonoBehaviour
 
     void JumpKeyControls()
     {
-        if (!incapableofaction_flag)
+        if (!isIncapableAction)
         {
             //�u�[�X�g��
-            if (boost_flag)
+            if (isBoost)
             {
                 Boosting();
             }
             //�W�����v
-            if (!jump_flag) { }
-            else if (!type_groundrunnig && !replacement_flag)
+            if (!isJump) { }
+            else if (!isTypeGroundRunning && !isReplacement)
             {
-                if (jump_flag && !boost_flag && !jumpkey_pressing)
+                if (isJump && !isBoost && !isJumpKeyPressing)
                 {
-                    if (!stiffness_flag || step_flag)
+                    if (!isStiffness || isStep)
                     {
-                        if (jumprug_time >= 0.3f)
+                        if (jumpRugTime >= 0.3f)
                         {
-                            rise_flag = false;
-                            jump_flag = false;
+                            isRise = false;
+                            isJump = false;
                         }
                     }
                 }
@@ -935,49 +946,49 @@ public class KMF_Control : MonoBehaviour
         }
 
         //�W�����v����
-        if (jump_flag && !boost_flag)
+        if (isJump && !isBoost)
         {
-            if (!stiffness_flag || step_flag)
+            if (!isStiffness || isStep)
             {
                 //�W�����v�J�n����1�x�������s
-                if (jumpmove_flag)
+                if (isJumpMove)
                 {
-                    if (!step_flag)
+                    if (!isStep)
                     {
                         KMF_RapidRotation();
                     }
                     else
                     {
-                        stepjump_flag = true;
+                        isStepJump = true;
                     }
                     StepFinish();
-                    jumpmove_flag = false;
+                    isJumpMove = false;
                 }
 
                 //�n���p
-                if (type_groundrunnig)
+                if (isTypeGroundRunning)
                 {
-                    jumprug_time += Time.deltaTime;
-                    if (jumprug_time >= 0.2f && !rise_flag)
+                    jumpRugTime += Time.deltaTime;
+                    if (jumpRugTime >= 0.2f && !isRise)
                     {
                         JumpStart();
                     }
-                    else if (jumprug_time <= 1.0f && jumprug_time >= 0.2f)
+                    else if (jumpRugTime <= 1.0f && jumpRugTime >= 0.2f)
                     {
                         Jumping();
-                        rise_flag = false;
-                        jump_flag = false;
+                        isRise = false;
+                        isJump = false;
                     }
                 }
                 //�z�o�[�p
                 else
                 {
-                    jumprug_time += Time.deltaTime;
-                    if (jumprug_time >= 0.2f && !rise_flag)
+                    jumpRugTime += Time.deltaTime;
+                    if (jumpRugTime >= 0.2f && !isRise)
                     {
                         JumpStart();
                     }
-                    else if (jumprug_time >= 0.2f)
+                    else if (jumpRugTime >= 0.2f)
                     {
                         Jumping();
                         boost_amount -= Time.deltaTime * 10f;
@@ -986,15 +997,15 @@ public class KMF_Control : MonoBehaviour
             }
             else
             {
-                if (underattack_flag || step_flag)
+                if (isUnderAttack || isStep)
                 {
-                    jumprug_time += Time.deltaTime;
-                    if (jumprug_time >= 0.2f && !rise_flag)
-                        jump_flag = false;
+                    jumpRugTime += Time.deltaTime;
+                    if (jumpRugTime >= 0.2f && !isRise)
+                        isJump = false;
                 }
                 else
                 {
-                    jump_flag = false;
+                    isJump = false;
                 }
             }
         }
@@ -1004,28 +1015,28 @@ public class KMF_Control : MonoBehaviour
         }
 
         //�u�[�X�g�I��
-        if ((!leverinsert_flag && !Input.GetButton("Boost")) || incapableofaction_flag)
+        if ((!isLeverInsert && !Input.GetButton("Boost")) || isIncapableAction)
         {
-            if (boost_flag)
+            if (isBoost)
             {
                 BoostFinish();
-                if (!air_flag)
+                if (!isAir)
                 {
-                    slide_flag = true;
-                    underattack_flag = true;
+                    isSlide = true;
+                    isUnderAttack = true;
                 }
             }
         }
 
         //�Y�T����
-        if (slide_flag)
+        if (isSlide)
         {
             anim.SetBool("Boost_Landing_Finish", true);
-            slide_time += Time.deltaTime;
-            if(slide_time > 1.5f)
+            slideTime += Time.deltaTime;
+            if(slideTime > 1.5f)
             {
                 SlideFinish();
-                boost_amount = boost_maxamount;
+                boost_amount = BOOST_MAX;
             }
         }
     }
@@ -1033,29 +1044,29 @@ public class KMF_Control : MonoBehaviour
     //�W�����v�J�n���̐���
     void JumpStart()
     {
-        if (!landing_flag)
+        if (!isLanding)
         {
             lastmove_name = "jump";
             anim.SetBool("Jump", true);
             anim.SetBool("Boost_Landing", false);
             boost_amount -= 10;
-            rise_flag = true;
+            isRise = true;
         }
     }
 
     //�W�����v���̐���
     void Jumping()
     {
-        if (!landing_flag)
+        if (!isLanding)
         {
             Vector3 jump_direction;
             Vector3 jump_moving;
 
             jump_direction = gameObject.transform.up * 1;
             jump_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-            jump_moving = jump_direction * jump_power;
+            jump_moving = jump_direction * JUMP_POWER;
             movingvelocity = rb.velocity;
-            if (stepjump_flag)
+            if (isStepJump)
             {
                 movingvelocity /= 2;
             }
@@ -1065,37 +1076,37 @@ public class KMF_Control : MonoBehaviour
 
     void Boosting()
     {
-        if (!type_groundrunnig)
+        if (!isTypeGroundRunning)
         {
             rb.useGravity = false;
         }
-        if (movingdirection != new Vector3(0, 0, 0) && leverinsert_flag)
+        if (movingdirection != new Vector3(0, 0, 0) && isLeverInsert)
         {
             Vector3 boost_direction;
             boost_direction = transform.forward;
             boost_direction.Normalize();
-            movingvelocity = boost_direction * boost_speed;
+            movingvelocity = boost_direction * BOOST_SPEED;
         }
         else
         {
             Vector3 boost_direction;
             boost_direction = transform.forward;
             boost_direction.Normalize();
-            movingvelocity = boost_direction * boost_speed;
+            movingvelocity = boost_direction * BOOST_SPEED;
             rb.velocity = new Vector3(movingvelocity.x, rb.velocity.y, movingvelocity.z);
         }
-        boostconsumed_time += Time.deltaTime;
-        if (boostconsumed_time >= 0.1f)
+        boostConsumedTime += Time.deltaTime;
+        if (boostConsumedTime >= 0.1f)
         {
             boost_amount -= 2;
-            boostconsumed_time = 0;
+            boostConsumedTime = 0;
         }
     }
 
     //�u�[�X�g�I��
     void BoostFinish()
     {
-        boost_flag = false;
+        isBoost = false;
         rb.useGravity = true;
         lastmove_name = "boost";
         Eff_SpeedLine.SetActive(false);
@@ -1116,26 +1127,26 @@ public class KMF_Control : MonoBehaviour
     void SlideFinish()
     {
         anim.SetBool("Boost_Landing_Finish", false);
-        slide_flag = false;
-        slide_time = 0;
-        incapableofaction_flag = false;
-        underattack_flag = false;
+        isSlide = false;
+        slideTime = 0;
+        isIncapableAction = false;
+        isUnderAttack = false;
     }
 
     //���n����
     void LandingTime()
     {
-        if (landing_flag && (!underattack_flag || lastmove_name == "mainshooting"))
+        if (isLanding && (!isUnderAttack || lastmove_name == "mainshooting"))
         {
             anim.SetBool("Landing", true);
-            landing_time += Time.deltaTime;
-            if(landing_time >= 0.5f)
+            landingTime += Time.deltaTime;
+            if(landingTime >= 0.5f)
             {
                 lastmove_name = "null";
-                landing_flag = false;
-                landing_time = 0;
+                isLanding = false;
+                landingTime = 0;
                 anim.SetBool("Landing", false);
-                underattack_flag = false;
+                isUnderAttack = false;
             }
         }
     }
@@ -1153,13 +1164,13 @@ public class KMF_Control : MonoBehaviour
     void ShootingKeyControls()
     {
         //���C���ˌ���
-        if (mainshooting_flag)
+        if (isMainShooting)
         {
-            mainshooting_time += Time.deltaTime;
-            if(mainshooting_time >= 0.23f && !mainshootingfiring_flag)
+            mainShootingTime += Time.deltaTime;
+            if(mainShootingTime >= 0.23f && !isMainShootingFiring)
             {
                 mainshooting_number--;
-                mainshootingfiring_flag = true;
+                isMainShootingFiring = true;
                 GameObject _beam;
                 if (SceneManager.GetActiveScene().name == "TrainingScene")
                 {
@@ -1178,10 +1189,10 @@ public class KMF_Control : MonoBehaviour
                     _beam.GetComponent<Beam_Control>().LockOnEnemySetting(gameObject, null);
                 }
             }
-            if(mainshooting_time >= 1.0f)
+            if(mainShootingTime >= 1.0f)
             {
                 MainShootingFinish();
-                underattack_flag = false;
+                isUnderAttack = false;
             }
 
             if(LockOnEnemy == null)
@@ -1193,19 +1204,19 @@ public class KMF_Control : MonoBehaviour
         //�����[�h
         if (mainshooting_maxnumber > mainshooting_number)
         {
-            mainshooting_currentreloadtime += Time.deltaTime;
-            if(mainshooting_currentreloadtime >= mainshooting_reloadtime)
+            mainShootingCurrentReloadTime += Time.deltaTime;
+            if(mainShootingCurrentReloadTime >= mainShootingReloadTime)
             {
                 mainshooting_number++;
-                mainshooting_currentreloadtime = 0;
+                mainShootingCurrentReloadTime = 0;
             }
         }
     }
 
     void MainShootingFinish()
     {
-        mainshooting_flag = false;
-        stiffness_flag = false;
+        isMainShooting = false;
+        isStiffness = false;
         anim.SetBool("MainShooting", false);
         gameObject.transform.Find("Lancelot/Rig 1").GetComponent<Rig>().weight = 0;
     }
@@ -1213,13 +1224,13 @@ public class KMF_Control : MonoBehaviour
     //�T�u�ˌ�����
     void SubShootingControls()
     {
-        if (subshooting_flag)
+        if (isSubShooting)
         {
-            subshooting_time += Time.deltaTime;
-            if(subshooting_time >= 0.3f && !subshootingfiring_flag)
+            subShootingTime += Time.deltaTime;
+            if(subShootingTime >= 0.3f && !isSubShootingFiring)
             {
                 subshooting_number--;
-                subshootingfiring_flag = true;
+                isSubShootingFiring = true;
                 if (SceneManager.GetActiveScene().name == "TrainingScene")
                 {
                     SlashHarken_Instance = Instantiate(SlashHarken, Lancelot_ShashHarken.transform.position, Lancelot_ShashHarken.transform.rotation);
@@ -1242,7 +1253,7 @@ public class KMF_Control : MonoBehaviour
                 }
                 lastmove_name = "subshooting";
             }
-            if (subshooting_time >= 0.8f && subshooting_time < 1.5f)
+            if (subShootingTime >= 0.8f && subShootingTime < 1.5f)
             {
                 anim.SetBool("SubShooting_Start", false);
                 anim.SetBool("SubShooting_Finish", true);
@@ -1251,10 +1262,10 @@ public class KMF_Control : MonoBehaviour
                     Destroy(SlashHarken_Instance);
                 }
             }
-            if (subshooting_time >= 1.5f)
+            if (subShootingTime >= 1.5f)
             {
                 SubShootingFinish();
-                underattack_flag = false;
+                isUnderAttack = false;
             }
 
             if(SlashHarken_Instance != null)
@@ -1266,11 +1277,11 @@ public class KMF_Control : MonoBehaviour
         //�����[�h
         if (subshooting_maxnumber > subshooting_number)
         {
-            subshooting_currentreloadtime += Time.deltaTime;
-            if (subshooting_currentreloadtime >= subshooting_reloadtime)
+            subShootingCurrentReloadTime += Time.deltaTime;
+            if (subShootingCurrentReloadTime >= subShootingReloadTime)
             {
                 subshooting_number++;
-                subshooting_currentreloadtime = 0;
+                subShootingCurrentReloadTime = 0;
             }
         }
     }
@@ -1279,8 +1290,8 @@ public class KMF_Control : MonoBehaviour
     {
         anim.SetBool("SubShooting_Start", false);
         anim.SetBool("SubShooting_Finish", false);
-        subshooting_flag = false;
-        stiffness_flag = false;
+        isSubShooting = false;
+        isStiffness = false;
         gameObject.transform.eulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
         if (SlashHarken_Instance != null)
         {
@@ -1291,28 +1302,28 @@ public class KMF_Control : MonoBehaviour
     //����ˌ��{�^������
     void SpecialShootingControls()
     {
-        if (!incapableofaction_flag
-            && (!underattack_flag || lastmove_name == "mainshooting" || lastmove_name == "specialattack"))
+        if (!isIncapableAction
+            && (!isUnderAttack || lastmove_name == "mainshooting" || lastmove_name == "specialattack"))
         {
-            if (!specialshooting_flag)
+            if (!isSpecialShooting)
             {
 
             }
-            else if (specialshooting_flag && specialshootinganimation_flag)
+            else if (isSpecialShooting && isSpecialShootingAnimation)
             {
                 anim.SetBool("SpecialShooting_Start", false);
-                specialshootinganimation_flag = false;
+                isSpecialShootingAnimation = false;
             }
         }
 
         //����ˌ���
-        if (specialshooting_flag)
+        if (isSpecialShooting)
         {
-            specialshooting_time += Time.deltaTime;
-            if (specialshooting_time >= 0.6f && !specialshootingfiring_flag)
+            specialShootingTime += Time.deltaTime;
+            if (specialShootingTime >= 0.6f && !isSpecialShootingFiring)
             {
                 specialshooting_number--;
-                specialshootingfiring_flag = true;
+                isSpecialShootingFiring = true;
                 GameObject _Beam_FullPower;
                 if (SceneManager.GetActiveScene().name == "TrainingScene")
                 {
@@ -1331,7 +1342,7 @@ public class KMF_Control : MonoBehaviour
                     _Beam_FullPower.GetComponent<Beam_Control>().LockOnEnemySetting(gameObject, null);
                 }
             }
-            if (specialshooting_time >= 1.5f)
+            if (specialShootingTime >= 1.5f)
             {
                 SpecialShootingFinish();
             }
@@ -1340,11 +1351,11 @@ public class KMF_Control : MonoBehaviour
         //�����[�h
         if (specialshooting_number == 0)
         {
-            specialshooting_currentreloadtime += Time.deltaTime;
-            if (specialshooting_currentreloadtime >= specialshooting_reloadtime)
+            specialShootingCurrentReloadTime += Time.deltaTime;
+            if (specialShootingCurrentReloadTime >= specialShootingReloadTime)
             {
                 specialshooting_number = specialshooting_maxnumber;
-                specialshooting_currentreloadtime = 0;
+                specialShootingCurrentReloadTime = 0;
             }
         }
     }
@@ -1352,9 +1363,9 @@ public class KMF_Control : MonoBehaviour
     void SpecialShootingFinish()
     {
         anim.SetBool("SpecialShooting", false);
-        specialshooting_flag = false;
-        stiffness_flag = false;
-        underattack_flag = false;
+        isSpecialShooting = false;
+        isStiffness = false;
+        isUnderAttack = false;
         Varis_Normal.SetActive(true);
         Varis_FullPower.SetActive(false);
         gameObject.transform.eulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
@@ -1366,12 +1377,12 @@ public class KMF_Control : MonoBehaviour
         Vector3 attack_direction;
 
         //�i������
-        if (attack_flag)
+        if (isAttack)
         {
-            attack_time += Time.deltaTime;
-            if (attack_time <= 0.8f && (!attack1_flag && !attack2_flag && !attack3_flag))
+            attackTime += Time.deltaTime;
+            if (attackTime <= 0.8f && (!isAttack1 && !isAttack2 && !isAttack3))
             {
-                if (induction_flag)
+                if (isInduction)
                 {
                     if (LockOnEnemy != null)
                     {
@@ -1379,15 +1390,15 @@ public class KMF_Control : MonoBehaviour
                     }
                     attack_direction = gameObject.transform.forward * 1;
                     attack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-                    attack_moving = attack_direction * boost_speed * 1f;
+                    attack_moving = attack_direction * BOOST_SPEED * 1f;
                     rb.velocity = new Vector3(attack_moving.x, attack_moving.y, attack_moving.z);
                 }
             }
-            else if (attack_time > 0.8f && (!attack1_flag && !attack2_flag && !attack3_flag))
+            else if (attackTime > 0.8f && (!isAttack1 && !isAttack2 && !isAttack3))
             {
-                attack_time = 0;
-                attackfinish_time = 1.0f;
-                attack1_flag = true;
+                attackTime = 0;
+                attackFinishTime = 1.0f;
+                isAttack1 = true;
                 anim.SetBool("Attack_Induction", false);
                 anim.SetBool("Attack1", true);
                 Rigidity();
@@ -1399,7 +1410,7 @@ public class KMF_Control : MonoBehaviour
                 attack_moving = attack_direction * 10f;
                 rb.velocity = new Vector3(attack_moving.x, attack_moving.y, attack_moving.z);
             }
-            if (attack_time >= attackfinish_time)
+            if (attackTime >= attackFinishTime)
             {
                 AttackFinish();
                 transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
@@ -1407,29 +1418,29 @@ public class KMF_Control : MonoBehaviour
         }
 
         //�T�u�ˌ��i���h������
-        if (subshooting_fightingvariants_flag)
+        if (isSubShootingFightingVariants)
         {
-            subShooting_fightingvariants_time += Time.deltaTime;
-            if (subShooting_fightingvariants_time <= 0.2f)
+            subShootingFightingVariantsTime += Time.deltaTime;
+            if (subShootingFightingVariantsTime <= 0.2f)
             {
-                if (induction_flag && LockOnEnemy != null)
+                if (isInduction && LockOnEnemy != null)
                 {
                     gameObject.transform.LookAt(LockOnEnemy.transform);
                 }
                 attack_direction = gameObject.transform.forward * 1;
                 attack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-                attack_moving = attack_direction * boost_speed;
+                attack_moving = attack_direction * BOOST_SPEED;
                 rb.velocity = new Vector3(attack_moving.x, attack_moving.y, attack_moving.z);
-                isinair_subshooting_fightingvariants_flag = air_flag;
+                isSubShootingFightingVariantsInAir = isAir;
             }
-            if (subShooting_fightingvariants_time >= 2.0f)
+            if (subShootingFightingVariantsTime >= 2.0f)
             {
                 SubShootingFightingVariantsFinish();
-                if (!isinair_subshooting_fightingvariants_flag)
+                if (!isSubShootingFightingVariantsInAir)
                 {
-                    landing_flag = true;
-                    boost_amount = boost_maxamount;
-                    incapableofaction_flag = false;
+                    isLanding = true;
+                    boost_amount = BOOST_MAX;
+                    isIncapableAction = false;
                 }
             }
         }
@@ -1437,13 +1448,13 @@ public class KMF_Control : MonoBehaviour
 
     public void StartAttack()
     {
-        if (attack_flag)
+        if (isAttack)
         {
-            if (attack_time < 0.8f && (!attack1_flag && !attack2_flag && !attack3_flag))
+            if (attackTime < 0.8f && (!isAttack1 && !isAttack2 && !isAttack3))
             {
-                attack_time = 0;
-                attackfinish_time = 1.0f;
-                attack1_flag = true;
+                attackTime = 0;
+                attackFinishTime = 1.0f;
+                isAttack1 = true;
                 anim.SetBool("Attack1", true);
                 Rigidity();
             }
@@ -1461,13 +1472,13 @@ public class KMF_Control : MonoBehaviour
         anim.SetBool("Attack1", false);
         anim.SetBool("Attack2", false);
         anim.SetBool("Attack3", false);
-        attack_flag = false;
-        attack1_flag = false;
-        attack2_flag = false;
-        attack3_flag = false;
-        stiffness_flag = false;
-        underattack_flag = false;
-        attack_time = 0;
+        isAttack = false;
+        isAttack1 = false;
+        isAttack2 = false;
+        isAttack3 = false;
+        isStiffness = false;
+        isUnderAttack = false;
+        attackTime = 0;
         Varis_Normal.SetActive(true);
         Varis_FullPower.SetActive(false);
         MVS_R.SetActive(false);
@@ -1483,10 +1494,10 @@ public class KMF_Control : MonoBehaviour
         Varis_Normal.SetActive(true);
         Varis_FullPower.SetActive(false);
         anim.SetBool("SubShooting_FightingVariants", false);
-        subshooting_fightingvariants_flag = false;
-        stiffness_flag = false;
+        isSubShootingFightingVariants = false;
+        isStiffness = false;
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
-        underattack_flag = false;
+        isUnderAttack = false;
         rb.useGravity = true;
         Leg_R.transform.GetComponent<BoxCollider>().enabled = false;
     }
@@ -1494,19 +1505,19 @@ public class KMF_Control : MonoBehaviour
     //����i���{�^������
     void SpecialAttackControls()
     {
-        if (specialattack_flag)
+        if (isSpecialAttack)
         {
-            specialattack_time += Time.deltaTime;
-            if (specialattack_time <= 0.4f)
+            specialAttackTime += Time.deltaTime;
+            if (specialAttackTime <= 0.4f)
             {
                 rb.velocity = new Vector3(specialattack_moving.x, rb.velocity.y, specialattack_moving.z);
             }
-            if (specialattack_time >= 1.2f)
+            if (specialAttackTime >= 1.2f)
             {
                 Varis_Normal.SetActive(true);
                 Varis_FullPower.SetActive(false);
                 SpecialAttackFinish();
-                underattack_flag = false;
+                isUnderAttack = false;
             }
         }
     }
@@ -1515,24 +1526,24 @@ public class KMF_Control : MonoBehaviour
     void SpecialAttackFinish()
     {
         anim.SetBool("SpecialAttack", false);
-        specialattack_flag = false;
-        stiffness_flag = false;
+        isSpecialAttack = false;
+        isStiffness = false;
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
 
     //�i��CS
     void FightingChargeControl()
     {
-        if (fightingcharge_currentreloadtime < fightingcharge_reloadtime && !fightingchargeinput_flag && !floatunit_flag)
+        if (fightingChargeCurrentReloadTime < fightingChargeReloadTime && !isFightingChargeInput && !isFloatUnit)
         {
-            fightingcharge_currentreloadtime += Time.deltaTime;
-            if(fightingcharge_currentreloadtime >= fightingcharge_reloadtime)
+            fightingChargeCurrentReloadTime += Time.deltaTime;
+            if(fightingChargeCurrentReloadTime >= fightingChargeReloadTime)
             {
-                fightingchargeinput_flag = true;
+                isFightingChargeInput = true;
             }
         }
-        else if (Input.GetButtonUp("Attack") && fightingcharge_time >= fightingcharge_maxtime && !floatunit_flag &&
-            !incapableofaction_flag && !underattack_flag && !landing_flag)
+        else if (Input.GetButtonUp("Attack") && fightingChargeTime >= fightingChargeMaxTime && !isFloatUnit &&
+            !isIncapableAction && !isUnderAttack && !isLanding)
         {
             Vector3 InstanceFloatUnit_postion = Cockpit.transform.Find("InstanceFloatUnit").transform.position;
             Quaternion InstanceFloatUnit_rotation = transform.rotation;
@@ -1546,45 +1557,45 @@ public class KMF_Control : MonoBehaviour
             }
             _FloatUnit.transform.parent = Cockpit.transform;
             transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
-            fightingcharge_currentreloadtime = 0;
-            fightingcharge_time = 0;
-            floatunit_presentlocation = 0;
-            fightingchargeinput_flag = false;
-            floatunit_flag = true;
+            fightingChargeCurrentReloadTime = 0;
+            fightingChargeTime = 0;
+            floatUnitPresentLocation = 0;
+            isFightingChargeInput = false;
+            isFloatUnit = true;
             BoostFinish();
             StepFinish();
-            floatunit_currenttime = floatunit_time;
-            type_groundrunnig = false;
+            floatUnitCurrentTime = floatUnitTime;
+            isTypeGroundRunning = false;
             anim.SetBool("Replacement", true);
-            replacement_flag = true;
-            stiffness_flag = true;
-            underattack_flag = true;
+            isReplacement = true;
+            isStiffness = true;
+            isUnderAttack = true;
             lastmove_name = "fightingchargeshot";
         }
-        else if (Input.GetButton("Attack") && fightingchargeinput_flag && !floatunit_flag)
+        else if (Input.GetButton("Attack") && isFightingChargeInput && !isFloatUnit)
         {
-            fightingcharge_time += Time.deltaTime;
+            fightingChargeTime += Time.deltaTime;
         }
-        else if(fightingchargeinput_flag && !floatunit_flag)
+        else if(isFightingChargeInput && !isFloatUnit)
         {
-            fightingcharge_time -= Time.deltaTime;
+            fightingChargeTime -= Time.deltaTime;
         }
 
-        fightingcharge_time = ChargeControl(fightingcharge_time, fightingcharge_maxtime);
+        fightingChargeTime = ChargeControl(fightingChargeTime, fightingChargeMaxTime);
 
-        if (floatunit_flag || fightingchargeinput_flag)
+        if (isFloatUnit || isFightingChargeInput)
         {
             if (_FloatUnit != null)
             {
                 _FloatUnit.transform.localEulerAngles = new Vector3(77, 0, 0);
                 float distance_two = Vector3.Distance(Cockpit.transform.Find("InstanceFloatUnit").transform.position, Cockpit.transform.position);
-                floatunit_presentlocation += (Time.deltaTime * 30f) / distance_two;
+                floatUnitPresentLocation += (Time.deltaTime * 30f) / distance_two;
                 _FloatUnit.transform.position =
-                    Vector3.Lerp(Cockpit.transform.Find("InstanceFloatUnit").transform.position, Cockpit.transform.Find("FloatUnit_FinishPosition").transform.position, floatunit_presentlocation);
+                    Vector3.Lerp(Cockpit.transform.Find("InstanceFloatUnit").transform.position, Cockpit.transform.Find("FloatUnit_FinishPosition").transform.position, floatUnitPresentLocation);
             }
 
-            floatunit_currenttime -= Time.deltaTime;
-            if(floatunit_currenttime <= 0 && floatunit_flag && !incapableofaction_flag && !underattack_flag && !landing_flag)
+            floatUnitCurrentTime -= Time.deltaTime;
+            if(floatUnitCurrentTime <= 0 && isFloatUnit && !isIncapableAction && !isUnderAttack && !isLanding)
             {
                 if (_FloatUnit != null)
                 {
@@ -1593,12 +1604,12 @@ public class KMF_Control : MonoBehaviour
                 BoostFinish();
                 StepFinish();
                 transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
-                floatunit_flag = false;
-                type_groundrunnig = true;
+                isFloatUnit = false;
+                isTypeGroundRunning = true;
                 anim.SetBool("Replacement", true);
-                replacement_flag = true;
-                stiffness_flag = true;
-                underattack_flag = true;
+                isReplacement = true;
+                isStiffness = true;
+                isUnderAttack = true;
                 lastmove_name = "fightingchargeshot";
             }
         }
@@ -1626,10 +1637,10 @@ public class KMF_Control : MonoBehaviour
 
     void ReplacementMove()
     {
-        if (replacement_flag)
+        if (isReplacement)
         {
-            replacement_time += Time.deltaTime;
-            if (replacement_time >= 1.0f)
+            replacementTime += Time.deltaTime;
+            if (replacementTime >= 1.0f)
             {
                 ReplacementFinish();
             }
@@ -1638,10 +1649,10 @@ public class KMF_Control : MonoBehaviour
 
     void ReplacementFinish()
     {
-        replacement_time = 0;
-        replacement_flag = false;
-        stiffness_flag = false;
-        underattack_flag = false;
+        replacementTime = 0;
+        isReplacement = false;
+        isStiffness = false;
+        isUnderAttack = false;
         anim.SetBool("Replacement", false);
     }
 
@@ -1660,20 +1671,20 @@ public class KMF_Control : MonoBehaviour
     //��낯���_�E������
     void Stagger_Control()
     {
-        if (stagger_flag || down_flag)
+        if (isStagger || isDown)
         {
-            if (!down_flag || !air_flag)
+            if (!isDown || !isAir)
             {
-                stagger_time += Time.deltaTime;
+                staggerTime += Time.deltaTime;
             }
-            if(stagger_time >= 0.2f)
+            if(staggerTime >= 0.2f)
             {
                 anim.SetBool("Stagger_Start", false);
             }
-            if(stagger_time <= 0.2f)
+            if(staggerTime <= 0.2f)
             {
                 Vector3 stagger_move;
-                if (down_flag)
+                if (isDown)
                 {
                     stagger_move = other_forward * 0.3f;
                 }
@@ -1683,36 +1694,36 @@ public class KMF_Control : MonoBehaviour
                 }
                 rb.velocity = new Vector3(stagger_move.x, rb.velocity.y, stagger_move.z);
             }
-            if(stagger_time >= 1.0f && !down_flag)
+            if(staggerTime >= 1.0f && !isDown)
             {
-                incapableofaction_flag = false;
-                stagger_flag = false;
-                stiffness_flag = false;
+                isIncapableAction = false;
+                isStagger = false;
+                isStiffness = false;
                 anim.SetBool("StaggerFront_Landing", false);
                 anim.SetBool("StaggerBack_Landing", false);
-                stagger_time = 0;
+                staggerTime = 0;
             }
-            else if(stagger_time >= 1f && stagger_time < 2f && down_flag)
+            else if(staggerTime >= 1f && staggerTime < 2f && isDown)
             {
                 anim.SetBool("GetUp", true);
                 anim.SetBool("DownFront", false);
                 anim.SetBool("DownBack", false);
             }
-            else if(stagger_time >= 2f && down_flag)
+            else if(staggerTime >= 2f && isDown)
             {
-                incapableofaction_flag = false;
-                stagger_flag = false;
-                stiffness_flag = false;
-                down_flag = false;
+                isIncapableAction = false;
+                isStagger = false;
+                isStiffness = false;
+                isDown = false;
                 anim.SetBool("StaggerFront_Landing", false);
                 anim.SetBool("StaggerBack_Landing", false);
                 anim.SetBool("DownFront", false);
                 anim.SetBool("DownBack", false);
                 anim.SetBool("GetUp", false);
-                stagger_time = 0;
-                if (!air_flag)
+                staggerTime = 0;
+                if (!isAir)
                 {
-                    boost_amount = boost_maxamount;
+                    boost_amount = BOOST_MAX;
                 }
             }
         }
@@ -1724,35 +1735,35 @@ public class KMF_Control : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Performed)
         {
-            if (!incapableofaction_flag)
+            if (!isIncapableAction)
             {
-                jumpkey_pressing = true;
+                isJumpKeyPressing = true;
                 //�W�����v
-                if (!jump_flag)
+                if (!isJump)
                 {
                     BoostFinish();
-                    jump_flag = true;
-                    jumprug_time = 0;
-                    boost_flag = false;
-                    BoostButtonTime = 0;
-                    jumpmove_flag = true;
-                    stepjump_flag = false;
+                    isJump = true;
+                    jumpRugTime = 0;
+                    isBoost = false;
+                    boostButtonTime = 0;
+                    isJumpMove = true;
+                    isStepJump = false;
                 }
                 //�u�[�X�g
-                else if (jump_flag)
+                else if (isJump)
                 {
-                    BoostButtonTime += Time.deltaTime;
-                    if (BoostButtonTime < 0.2f)
+                    boostButtonTime += Time.deltaTime;
+                    if (boostButtonTime < 0.2f)
                     {
-                        boost_flag = true;
-                        jump_flag = false;
-                        rise_flag = false;
+                        isBoost = true;
+                        isJump = false;
+                        isRise = false;
                         anim.SetBool("Boost_Landing", true);
                         anim.SetBool("SubShooting_Start", false);
                         anim.SetBool("SpecialShooting_Start", false);
                         anim.SetBool("Boost_Landing_Finish", false);
-                        slide_flag = false;
-                        slide_time = 0;
+                        isSlide = false;
+                        slideTime = 0;
                         MainShootingFinish();
                         SubShootingFinish();
                         SubShootingFightingVariantsFinish();
@@ -1762,15 +1773,15 @@ public class KMF_Control : MonoBehaviour
                         StepFinish();
                         ReplacementFinish();
                         boost_amount -= 15;
-                        boostconsumed_time = 0;
+                        boostConsumedTime = 0;
                         gameObject.transform.Find("Lancelot/Rig 1").GetComponent<Rig>().weight = 0;
                         Eff_SpeedLine.SetActive(true);
                         KMF_RapidRotation();
-                        if (!type_groundrunnig)
+                        if (!isTypeGroundRunning)
                         {
                             transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
                         }
-                        else if (!air_flag)
+                        else if (!isAir)
                         {
                             if (SceneManager.GetActiveScene().name == "TrainingScene")
                             {
@@ -1792,7 +1803,7 @@ public class KMF_Control : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Performed)
         {
-            jumpkey_pressing = false;
+            isJumpKeyPressing = false;
         }
     }
 
@@ -1800,17 +1811,17 @@ public class KMF_Control : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Performed)
         {
-            if (!incapableofaction_flag && (!underattack_flag || lastmove_name == "subshooting"))
+            if (!isIncapableAction && (!isUnderAttack || lastmove_name == "subshooting"))
             {
-                if (!mainshooting_flag)
+                if (!isMainShooting)
                 {
-                    if (mainshooting_number >= 1 && !landing_flag)
+                    if (mainshooting_number >= 1 && !isLanding)
                     {
-                        mainshooting_flag = true;
+                        isMainShooting = true;
                         anim.SetBool("MainShooting", true);
-                        mainshootingfiring_flag = false;
-                        mainshooting_time = 0;
-                        underattack_flag = true;
+                        isMainShootingFiring = false;
+                        mainShootingTime = 0;
+                        isUnderAttack = true;
                         Varis_Normal.SetActive(true);
                         Varis_FullPower.SetActive(false);
                         if (LockOnEnemy != null)
@@ -1828,7 +1839,7 @@ public class KMF_Control : MonoBehaviour
                         {
                             if (LockOnEnemy != null)
                             {
-                                stiffness_flag = true;
+                                isStiffness = true;
                                 gameObject.transform.LookAt(LockOnEnemy.transform);
                             }
                         }
@@ -1841,25 +1852,25 @@ public class KMF_Control : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Performed)
         {
-            if (!incapableofaction_flag && !underattack_flag)
+            if (!isIncapableAction && !isUnderAttack)
             {
-                if (!subshooting_flag)
+                if (!isSubShooting)
                 {
-                    if (subshooting_number >= 1 && !landing_flag)
+                    if (subshooting_number >= 1 && !isLanding)
                     {
                         StepFinish();
                         anim.SetBool("SubShooting_Start", true);
-                        subshooting_flag = true;
-                        subshootingfiring_flag = false;
-                        subshooting_time = 0;
-                        stiffness_flag = true;
-                        underattack_flag = true;
+                        isSubShooting = true;
+                        isSubShootingFiring = false;
+                        subShootingTime = 0;
+                        isStiffness = true;
+                        isUnderAttack = true;
                         Varis_Normal.SetActive(true);
                         Varis_FullPower.SetActive(false);
 
-                        boost_flag = false;
+                        isBoost = false;
                         anim.SetBool("Boost_Landing", false);
-                        if (induction_flag && LockOnEnemy != null)
+                        if (isInduction && LockOnEnemy != null)
                         {
                             gameObject.transform.LookAt(LockOnEnemy.transform);
                         }
@@ -1874,31 +1885,31 @@ public class KMF_Control : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Performed)
         {
-            if (!incapableofaction_flag
-            && (!underattack_flag || lastmove_name == "mainshooting" || lastmove_name == "specialattack"))
+            if (!isIncapableAction
+            && (!isUnderAttack || lastmove_name == "mainshooting" || lastmove_name == "specialattack"))
             {
-                if (Input.GetButtonDown("SpecialShooting") && !specialshooting_flag)
+                if (Input.GetButtonDown("SpecialShooting") && !isSpecialShooting)
                 {
-                    if (specialshooting_number >= 1 && !landing_flag)
+                    if (specialshooting_number >= 1 && !isLanding)
                     {
                         StepFinish();
                         MainShootingFinish();
                         SpecialAttackFinish();
                         anim.SetBool("SpecialShooting", true);
                         anim.SetBool("SpecialShooting_Start", true);
-                        specialshooting_flag = true;
-                        specialshootingfiring_flag = false;
-                        specialshooting_time = 0;
-                        specialshootinganimation_flag = true;
-                        stiffness_flag = true;
-                        underattack_flag = true;
+                        isSpecialShooting = true;
+                        isSpecialShootingFiring = false;
+                        specialShootingTime = 0;
+                        isSpecialShootingAnimation = true;
+                        isStiffness = true;
+                        isUnderAttack = true;
                         Varis_Normal.SetActive(false);
                         Varis_FullPower.SetActive(true);
 
-                        boost_flag = false;
+                        isBoost = false;
                         anim.SetBool("Boost_Landing", false);
 
-                        if (induction_flag && LockOnEnemy != null)
+                        if (isInduction && LockOnEnemy != null)
                         {
                             gameObject.transform.LookAt(LockOnEnemy.transform);
                         }
@@ -1915,20 +1926,20 @@ public class KMF_Control : MonoBehaviour
         {
             Vector3 attack_direction;
 
-            if (!incapableofaction_flag)
+            if (!isIncapableAction)
             {
-                if (!landing_flag || underattack_flag)
+                if (!isLanding || isUnderAttack)
                 {
-                    if (!attack_flag && !attack1_flag && (!underattack_flag || lastmove_name == "specialattack"))
+                    if (!isAttack && !isAttack1 && (!isUnderAttack || lastmove_name == "specialattack"))
                     {
                         StepFinish();
                         SpecialAttackFinish();
                         anim.SetBool("Attack_Induction", true);
-                        attack_flag = true;
-                        stiffness_flag = true;
-                        underattack_flag = true;
-                        attack_time = 0;
-                        attackfinish_time = 1.8f;
+                        isAttack = true;
+                        isStiffness = true;
+                        isUnderAttack = true;
+                        attackTime = 0;
+                        attackFinishTime = 1.8f;
                         Varis_Normal.SetActive(false);
                         Varis_FullPower.SetActive(false);
                         MVS_R.SetActive(true);
@@ -1939,61 +1950,61 @@ public class KMF_Control : MonoBehaviour
                         MVS_R.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
                         MVS_L.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
 
-                        boost_flag = false;
+                        isBoost = false;
                         anim.SetBool("Boost_Landing", false);
                         lastmove_name = "attack";
                         transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
                     }
-                    else if (attack_flag && attack1_flag && !attack2_flag
+                    else if (isAttack && isAttack1 && !isAttack2
                         && anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|Attack_01"))
                     {
                         anim.SetBool("Attack1", false);
                         anim.SetBool("Attack2", true);
-                        attack2_flag = true;
-                        attack_time = 0;
-                        attackfinish_time = 1.0f;
+                        isAttack2 = true;
+                        attackTime = 0;
+                        attackFinishTime = 1.0f;
                         MVS_R.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
                         MVS_L.transform.Find("MVS").GetComponent<BoxCollider>().enabled = true;
                         MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().power = 70;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().correctionfactor = 0.15f;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().down_value = 0.3f;
+                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().correctionFactor = 0.15f;
+                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().downValue = 0.3f;
                     }
-                    else if (attack2_flag
+                    else if (isAttack2
                         && anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|Attack_02"))
                     {
                         anim.SetBool("Attack1", false);
                         anim.SetBool("Attack2", false);
                         anim.SetBool("Attack3", true);
-                        attack3_flag = true;
-                        attack2_flag = false;
-                        attack_time = 0;
-                        attackfinish_time = 1.0f;
+                        isAttack3 = true;
+                        isAttack2 = false;
+                        attackTime = 0;
+                        attackFinishTime = 1.0f;
                         MVS_R.transform.Find("MVS").GetComponent<BoxCollider>().enabled = false;
                         MVS_L.transform.Find("MVS").GetComponent<BoxCollider>().enabled = true;
                         MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().power = 80;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().correctionfactor = 0.12f;
-                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().down_value = 6;
+                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().correctionFactor = 0.12f;
+                        MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().downValue = 6;
                     }
 
                     //�T�u�ˌ��i���h��
-                    if (lastmove_name == "subshooting" && subshooting_flag && !subshooting_fightingvariants_flag)
+                    if (lastmove_name == "subshooting" && isSubShooting && !isSubShootingFightingVariants)
                     {
                         SubShootingFinish();
                         anim.SetBool("SubShooting_FightingVariants", true);
                         anim.SetBool("SubShooting_Start", false);
-                        subshooting_fightingvariants_flag = true;
-                        stiffness_flag = true;
-                        underattack_flag = true;
+                        isSubShootingFightingVariants = true;
+                        isStiffness = true;
+                        isUnderAttack = true;
                         rb.useGravity = false;
-                        subShooting_fightingvariants_time = 0;
+                        subShootingFightingVariantsTime = 0;
                         Varis_Normal.SetActive(false);
                         Varis_FullPower.SetActive(false);
                         Leg_R.transform.GetComponent<BoxCollider>().enabled = true;
 
-                        boost_flag = false;
+                        isBoost = false;
                         anim.SetBool("Boost_Landing", false);
 
-                        if (induction_flag && LockOnEnemy != null)
+                        if (isInduction && LockOnEnemy != null)
                         {
                             gameObject.transform.LookAt(LockOnEnemy.transform);
                         }
@@ -2001,7 +2012,7 @@ public class KMF_Control : MonoBehaviour
                         lastmove_name = "subshooting_fightingvariants";
                         attack_direction = gameObject.transform.forward * 1;
                         attack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-                        attack_moving = attack_direction * boost_speed;
+                        attack_moving = attack_direction * BOOST_SPEED;
                     }
                 }
             }
@@ -2012,31 +2023,31 @@ public class KMF_Control : MonoBehaviour
         if (context.phase == InputActionPhase.Performed)
         {
             Vector3 specialattack_direction;
-            if (!incapableofaction_flag && !underattack_flag)
+            if (!isIncapableAction && !isUnderAttack)
             {
-                if (!landing_flag)
+                if (!isLanding)
                 {
                     StepFinish();
                     anim.SetBool("SpecialAttack", true);
-                    specialattack_flag = true;
-                    specialattack_time = 0;
+                    isSpecialAttack = true;
+                    specialAttackTime = 0;
                     boost_amount -= 10;
-                    stiffness_flag = true;
-                    underattack_flag = true;
+                    isStiffness = true;
+                    isUnderAttack = true;
                     Varis_Normal.SetActive(false);
                     Varis_FullPower.SetActive(false);
 
-                    boost_flag = false;
+                    isBoost = false;
                     anim.SetBool("Boost_Landing", false);
 
-                    if (induction_flag && LockOnEnemy != null)
+                    if (isInduction && LockOnEnemy != null)
                     {
                         gameObject.transform.LookAt(LockOnEnemy.transform);
                     }
                     lastmove_name = "specialattack";
                     specialattack_direction = gameObject.transform.forward * 1;
                     specialattack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
-                    specialattack_moving = specialattack_direction * boost_speed * 1.2f;
+                    specialattack_moving = specialattack_direction * BOOST_SPEED * 1.2f;
                 }
             }
         }
@@ -2161,14 +2172,14 @@ public class KMF_Control : MonoBehaviour
                 {
                     anim.SetBool("Jump", false);
                     anim.SetBool("Air", false);
-                    jump_flag = false;
-                    if (!boost_flag)
+                    isJump = false;
+                    if (!isBoost)
                     {
-                        landing_flag = true;
-                        boost_amount = boost_maxamount;
-                        incapableofaction_flag = false;
+                        isLanding = true;
+                        boost_amount = BOOST_MAX;
+                        isIncapableAction = false;
                     }
-                    else if (type_groundrunnig)
+                    else if (isTypeGroundRunning)
                     {
                         if (SceneManager.GetActiveScene().name == "TrainingScene")
                         {
@@ -2181,14 +2192,14 @@ public class KMF_Control : MonoBehaviour
                         //EffDust_R.GetComponent<ParticleSystem>().Play();
                         //EffDust_L.GetComponent<ParticleSystem>().Play();
                     }
-                    air_flag = false;
+                    isAir = false;
 
-                    if (down_flag)
+                    if (isDown)
                     {
                         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
                     }
 
-                    if (!type_groundrunnig && boost_flag)
+                    if (!isTypeGroundRunning && isBoost)
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
                     }
@@ -2206,9 +2217,9 @@ public class KMF_Control : MonoBehaviour
             {
                 if (other.gameObject.CompareTag("Ground"))
                 {
-                    if (!step_flag && !jump_flag && !boost_flag && !slide_flag && !down_flag && !stagger_flag)
+                    if (!isStep && !isJump && !isBoost && !isSlide && !isDown && !isStagger)
                     {
-                        incapableofaction_flag = false;
+                        isIncapableAction = false;
                     }
                 }
             }
@@ -2224,7 +2235,7 @@ public class KMF_Control : MonoBehaviour
                 if (other.gameObject.CompareTag("Ground"))
                 {
                     anim.SetBool("Air", true);
-                    air_flag = true;
+                    isAir = true;
                 }
             }
         }
@@ -2247,7 +2258,7 @@ public class KMF_Control : MonoBehaviour
         {
             if (pv.IsMine || SceneManager.GetActiveScene().name == "TrainingScene")
             {
-                if (!hitstart_stay_flag)
+                if (!isHitStartStay)
                 {
                     Hit_Control(other);
                 }
@@ -2267,7 +2278,7 @@ public class KMF_Control : MonoBehaviour
                     {
                         if (other.gameObject.CompareTag("Bullet") || other.gameObject.CompareTag("Untagged"))
                         {
-                            hitstart_stay_flag = false;
+                            isHitStartStay = false;
                         }
                     }
                 }
@@ -2281,16 +2292,16 @@ public class KMF_Control : MonoBehaviour
         {
             if (other.gameObject.GetComponent<Beam_Control>().OwnMachine != gameObject)
             {
-                if (!down_flag)
+                if (!isDown)
                 {
                     if (other.gameObject.CompareTag("Bullet") || other.gameObject.CompareTag("Untagged"))
                     {
                         other_forward = other.transform.position;
                         //�K�[�h����
-                        if (defense_flag && Vector3.Angle(transform.forward, other.gameObject.transform.forward) >= 90)
+                        if (isDefense && Vector3.Angle(transform.forward, other.gameObject.transform.forward) >= 90)
                         {
-                            defenseing_flag = true;
-                            defenseing_time = 0;
+                            isDefending = true;
+                            defendingTime = 0;
                             Transform other_transform = other.transform;
                             other_transform.position = other_transform.forward * -2;
                             other_transform.position = new Vector3(other.transform.position.x, other.transform.position.y + 5f, other.transform.position.z);
@@ -2299,7 +2310,7 @@ public class KMF_Control : MonoBehaviour
                         }
                         else
                         {
-                            hitstart_stay_flag = true;
+                            isHitStartStay = true;
                             BoostFinish();
                             DefenseFinish();
                             StepFinish();
@@ -2310,19 +2321,19 @@ public class KMF_Control : MonoBehaviour
                             AttackFinish();
                             SpecialAttackFinish();
                             ReplacementFinish();
-                            durable_value -= Mathf.CeilToInt(other.gameObject.GetComponent<Beam_Control>().power * correctionfactor);
-                            correctionfactor -= other.gameObject.GetComponent<Beam_Control>().correctionfactor;
-                            correctionfactor_resettime = 0f;
-                            if (correctionfactor < 0.1f)
+                            durable_value -= Mathf.CeilToInt(other.gameObject.GetComponent<Beam_Control>().power * correctionFactor);
+                            correctionFactor -= other.gameObject.GetComponent<Beam_Control>().correctionFactor;
+                            correctionFactorResetTime = 0f;
+                            if (correctionFactor < 0.1f)
                             {
-                                correctionfactor = 0.1f;
+                                correctionFactor = 0.1f;
                             }
-                            down_value += other.gameObject.GetComponent<Beam_Control>().down_value;
-                            if (down_value >= 6)
+                            downValue += other.gameObject.GetComponent<Beam_Control>().downValue;
+                            if (downValue >= 6)
                             {
-                                down_flag = true;
-                                incapableofaction_flag = true;
-                                stiffness_flag = true;
+                                isDown = true;
+                                isIncapableAction = true;
+                                isStiffness = true;
                                 Vector3 hitPos = other.ClosestPointOnBounds(this.transform.position);
                                 if (other.gameObject.CompareTag("Bullet"))
                                 {
@@ -2346,19 +2357,19 @@ public class KMF_Control : MonoBehaviour
                                         anim.SetBool("DownFront", true);
                                     }
                                 }
-                                stagger_time = 0;
-                                correctionfactor_resettime = 0;
-                                down_value = 0;
-                                if (air_flag)
+                                staggerTime = 0;
+                                correctionFactorResetTime = 0;
+                                downValue = 0;
+                                if (isAir)
                                 {
                                     transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 180);
                                 }
                             }
                             else
                             {
-                                stagger_flag = true;
-                                incapableofaction_flag = true;
-                                stiffness_flag = true;
+                                isStagger = true;
+                                isIncapableAction = true;
+                                isStiffness = true;
                                 Vector3 hitPos = other.ClosestPointOnBounds(this.transform.position);
                                 if (other.gameObject.CompareTag("Bullet"))
                                 {
@@ -2383,7 +2394,7 @@ public class KMF_Control : MonoBehaviour
                                     }
                                 }
                                 anim.SetBool("Stagger_Start", true);
-                                stagger_time = 0;
+                                staggerTime = 0;
                             }
                         }
                     }

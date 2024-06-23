@@ -24,19 +24,19 @@ public class ArmedUi_Control : MonoBehaviour
         ArmedUi[0].transform.Find("BulletNumberText").GetComponent<Text>().text = Player.GetComponent<KMF_Control>().mainshooting_number + "";
         ArmedUi[1].transform.Find("BulletNumberText").GetComponent<Text>().text = Player.GetComponent<KMF_Control>().specialshooting_number + "";
         ArmedUi[2].transform.Find("BulletNumberText").GetComponent<Text>().text = Player.GetComponent<KMF_Control>().subshooting_number + "";
-        if (!Player.GetComponent<KMF_Control>().fightingchargeinput_flag && !Player.GetComponent<KMF_Control>().floatunit_flag)
+        if (!Player.GetComponent<KMF_Control>().isFightingChargeInput && !Player.GetComponent<KMF_Control>().isFloatUnit)
         {
             ArmedUi[3].transform.Find("BulletNumberText").GetComponent<Text>().text =
-                (int)((Player.GetComponent<KMF_Control>().fightingcharge_currentreloadtime / Player.GetComponent<KMF_Control>().fightingcharge_reloadtime) * 100) + "";
+                (int)((Player.GetComponent<KMF_Control>().fightingChargeCurrentReloadTime / Player.GetComponent<KMF_Control>().fightingChargeReloadTime) * 100) + "";
             TextColors(ArmedUi[3].transform.Find("BulletNumberText").gameObject, 0);
         }
-        else if (Player.GetComponent<KMF_Control>().floatunit_flag)
+        else if (Player.GetComponent<KMF_Control>().isFloatUnit)
         {
             ArmedUi[3].transform.Find("BulletNumberText").GetComponent<Text>().text =
-                (int)((Player.GetComponent<KMF_Control>().floatunit_currenttime / Player.GetComponent<KMF_Control>().floatunit_time) * 100) + "";
+                (int)((Player.GetComponent<KMF_Control>().floatUnitCurrentTime / Player.GetComponent<KMF_Control>().floatUnitTime) * 100) + "";
             TextColors(ArmedUi[3].transform.Find("BulletNumberText").gameObject, 1);
         }
-        else if (Player.GetComponent<KMF_Control>().fightingchargeinput_flag)
+        else if (Player.GetComponent<KMF_Control>().isFightingChargeInput)
         {
             ArmedUi[3].transform.Find("BulletNumberText").GetComponent<Text>().text = "100";
             TextColors(ArmedUi[3].transform.Find("BulletNumberText").gameObject, 1);
@@ -68,7 +68,7 @@ public class ArmedUi_Control : MonoBehaviour
         else
         {
             ArmedUi[0].transform.Find("BulletNumberGauge_Outer/FillGauge").GetComponent<Image>().fillAmount =
-                Player.GetComponent<KMF_Control>().mainshooting_currentreloadtime / Player.GetComponent<KMF_Control>().mainshooting_reloadtime;
+                Player.GetComponent<KMF_Control>().mainShootingCurrentReloadTime / Player.GetComponent<KMF_Control>().mainShootingReloadTime;
         }
         if (Player.GetComponent<KMF_Control>().specialshooting_number > 0)
         {
@@ -78,7 +78,7 @@ public class ArmedUi_Control : MonoBehaviour
         else
         {
             ArmedUi[1].transform.Find("BulletNumberGauge_Outer/FillGauge").GetComponent<Image>().fillAmount =
-                Player.GetComponent<KMF_Control>().specialshooting_currentreloadtime / Player.GetComponent<KMF_Control>().specialshooting_reloadtime;
+                Player.GetComponent<KMF_Control>().specialShootingCurrentReloadTime / Player.GetComponent<KMF_Control>().specialShootingReloadTime;
         }
         if (Player.GetComponent<KMF_Control>().subshooting_number > 0)
         {
@@ -88,18 +88,18 @@ public class ArmedUi_Control : MonoBehaviour
         else
         {
             ArmedUi[2].transform.Find("BulletNumberGauge_Outer/FillGauge").GetComponent<Image>().fillAmount =
-                Player.GetComponent<KMF_Control>().subshooting_currentreloadtime / Player.GetComponent<KMF_Control>().subshooting_reloadtime;
+                Player.GetComponent<KMF_Control>().subShootingCurrentReloadTime / Player.GetComponent<KMF_Control>().subShootingReloadTime;
         }
-        if (!Player.GetComponent<KMF_Control>().fightingchargeinput_flag && !Player.GetComponent<KMF_Control>().floatunit_flag)
+        if (!Player.GetComponent<KMF_Control>().isFightingChargeInput && !Player.GetComponent<KMF_Control>().isFloatUnit)
         {
             ArmedUi[3].transform.Find("BulletNumberGauge_Outer/FillGauge").GetComponent<Image>().fillAmount =
-                Player.GetComponent<KMF_Control>().fightingcharge_currentreloadtime / Player.GetComponent<KMF_Control>().fightingcharge_reloadtime;
+                Player.GetComponent<KMF_Control>().fightingChargeCurrentReloadTime / Player.GetComponent<KMF_Control>().fightingChargeReloadTime;
             ImageColors(ArmedUi[3].transform.Find("BulletNumberGauge_Outer/FillGauge").gameObject, 0);
         }
-        else if (Player.GetComponent<KMF_Control>().floatunit_flag)
+        else if (Player.GetComponent<KMF_Control>().isFloatUnit)
         {
             ArmedUi[3].transform.Find("BulletNumberGauge_Outer/FillGauge").GetComponent<Image>().fillAmount =
-                Player.GetComponent<KMF_Control>().floatunit_currenttime / Player.GetComponent<KMF_Control>().floatunit_time;
+                Player.GetComponent<KMF_Control>().floatUnitCurrentTime / Player.GetComponent<KMF_Control>().floatUnitTime;
             ImageColors(ArmedUi[3].transform.Find("BulletNumberGauge_Outer/FillGauge").gameObject, 1);
         }
         else
@@ -126,10 +126,10 @@ public class ArmedUi_Control : MonoBehaviour
 
     void ChargeCaugeControl()
     {
-        if (Player.GetComponent<KMF_Control>().fightingchargeinput_flag)
+        if (Player.GetComponent<KMF_Control>().isFightingChargeInput)
         {
             ArmedUi[3].transform.Find("ChargeGauge_Outer/FillGauge").GetComponent<Image>().fillAmount =
-                Player.GetComponent<KMF_Control>().fightingcharge_time / Player.GetComponent<KMF_Control>().fightingcharge_maxtime;
+                Player.GetComponent<KMF_Control>().fightingChargeTime / Player.GetComponent<KMF_Control>().fightingChargeMaxTime;
         }
         else
         {

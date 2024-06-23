@@ -9,8 +9,8 @@ public class Beam_Control : MonoBehaviour
     Rigidbody rb;
 
     public int power;
-    public float correctionfactor;
-    public float down_value;
+    public float correctionFactor;
+    public float downValue;
     public float speed;
     public float induction_x;
     public float induction_y;
@@ -20,9 +20,9 @@ public class Beam_Control : MonoBehaviour
     public GameObject OwnMachine;
     GameObject LockOnEnemy;
     public bool changedirection_flag;
-    public bool fighting_flag;  //‚±‚ÌƒIƒuƒWƒFƒNƒg‚ªŠi“¬‚©
+    public bool fighting_flag;  //ï¿½ï¿½ï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½
     bool direction_flag = false;
-    bool induction_flag = true;
+    bool isInduction = true;
     Vector3 direction;
     Vector3 moving;
     float OwnMachinAndEnemy_distance;
@@ -63,20 +63,20 @@ public class Beam_Control : MonoBehaviour
 
                     if (LockOnEnemy.GetComponent<KMF_Control>())
                     {
-                        if (LockOnEnemy.GetComponent<KMF_Control>().inductionoff_flag)
+                        if (LockOnEnemy.GetComponent<KMF_Control>().isInductionOff)
                         {
-                            induction_flag = false;
+                            isInduction = false;
                         }
                     }
                     else if (LockOnEnemy.GetComponent<Cpu_Control>())
                     {
-                        if (LockOnEnemy.GetComponent<Cpu_Control>().inductionoff_flag)
+                        if (LockOnEnemy.GetComponent<Cpu_Control>().isInductionOff)
                         {
-                            induction_flag = false;
+                            isInduction = false;
                         }
                     }
                     Induction_time += Time.deltaTime;
-                    if (Induction_time >= Induction_cooltime && LockOnEnemy != null && induction_flag)
+                    if (Induction_time >= Induction_cooltime && LockOnEnemy != null && isInduction)
                     {
                         direction = transform.eulerAngles;
                         transform.LookAt(LockOnEnemy.transform);
@@ -95,7 +95,7 @@ public class Beam_Control : MonoBehaviour
                     OwnMachinAndEnemy_distance = Vector3.Distance(OwnMachine.transform.position, LockOnEnemy.transform.position) - 6f;
                     if (OwnMachinAndEnemy_distance <= OwnMachinAndBeam_distance)
                     {
-                        induction_flag = false;
+                        isInduction = false;
                     }
                 }
                 else

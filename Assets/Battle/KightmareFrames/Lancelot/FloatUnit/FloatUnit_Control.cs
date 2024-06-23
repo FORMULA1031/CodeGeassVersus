@@ -9,8 +9,8 @@ public class FloatUnit_Control : MonoBehaviour
     GameObject Rancelot_obj;
     KMF_Control KMF_Control;
     Animator anim;
-    bool boost_flag = false;
-    bool jump_flag = false;
+    bool isBoost = false;
+    bool isJump = false;
     ParticleSystem[] Jet_R = new ParticleSystem[3];
     ParticleSystem[] Jet_L = new ParticleSystem[3];
     PhotonView pv;
@@ -47,11 +47,11 @@ public class FloatUnit_Control : MonoBehaviour
                     KMF_Control.anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|MEBoost") ||
                     KMF_Control.anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|Jump"))
                 {
-                    if (!boost_flag && !jump_flag)
+                    if (!isBoost && !isJump)
                     {
                         if (!KMF_Control.anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|Jump"))
                         {
-                            boost_flag = true;
+                            isBoost = true;
                         }
                         Jet_R[0].Play();
                         Jet_R[1].Play();
@@ -59,7 +59,7 @@ public class FloatUnit_Control : MonoBehaviour
                         Jet_L[0].Play();
                         Jet_L[1].Play();
                         Jet_L[2].Play();
-                        jump_flag = true;
+                        isJump = true;
                     }
                 }
                 else
@@ -70,10 +70,10 @@ public class FloatUnit_Control : MonoBehaviour
                     Jet_L[0].Stop();
                     Jet_L[1].Stop();
                     Jet_L[2].Stop();
-                    boost_flag = false;
-                    jump_flag = false;
+                    isBoost = false;
+                    isJump = false;
                 }
-                anim.SetBool("Boost_Flag", boost_flag);
+                anim.SetBool("isBoost", isBoost);
             }
         }
     }

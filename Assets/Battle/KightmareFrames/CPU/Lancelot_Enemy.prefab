@@ -323,8 +323,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boost_amount: 0
-  inductionoff_flag: 0
-  down_flag: 0
+  isInductionOff: 0
+  isDown: 0
   durable_value: 1
   durable_maxvalue: 1
   mainshooting_number: 8
@@ -876,8 +876,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 65
-  correctionfactor: 0.2
-  down_value: 1.7
+  correctionFactor: 0.2
+  downValue: 1.7
   speed: 0
   induction_x: 0
   induction_y: 0
@@ -1070,8 +1070,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 100
-  correctionfactor: 0.2
-  down_value: 6
+  correctionFactor: 0.2
+  downValue: 6
   speed: 0
   induction_x: 0
   induction_y: 0
@@ -1637,8 +1637,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 70
-  correctionfactor: 0.15
-  down_value: 0.3
+  correctionFactor: 0.15
+  downValue: 0.3
   speed: 0
   induction_x: 0
   induction_y: 0

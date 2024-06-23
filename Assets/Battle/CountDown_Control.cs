@@ -13,7 +13,7 @@ public class CountDown_Control : MonoBehaviour
     GameObject Players;
     GameObject Canvas;
     GameObject LockOnMarkerCanvas;
-    public bool countdown_flag = true;
+    public bool countisDown = true;
     AudioSource AudioSource;
     public AudioClip countdown_se;
 
@@ -36,7 +36,7 @@ public class CountDown_Control : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (countdown_flag)
+        if (countisDown)
         {
             countdown_time += Time.deltaTime;
             countdown_scale = countdown_time;
@@ -73,7 +73,7 @@ public class CountDown_Control : MonoBehaviour
                         Players.GetComponent<KMF_Control>().enabled = true;
                     }
                 }
-                countdown_flag = false;
+                countisDown = false;
             }
         }
     }
