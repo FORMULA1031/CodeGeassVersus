@@ -176,6 +176,7 @@ public class KMF_Control : MonoBehaviour
         else if(!pv.IsMine)
         {
             Destroy(GetComponent<Rigidbody>());
+            GetComponent<PlayerInput>().enabled = false;
         }
     }
 
@@ -376,7 +377,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
-    //���o�[����
+    //移動方向と歩く処理
     void MoveKeyControls()
     {
         float x = Input.GetAxis("Move_X");
@@ -393,7 +394,7 @@ public class KMF_Control : MonoBehaviour
             lastlever_name = "null";
             anim.SetBool("Walk", false);
         }
-        movingdirection.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
+        movingdirection.Normalize();
         if (!isBoost && !isSlide)
         {
             Vector3 boost_direction;
@@ -407,14 +408,14 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
-    //�K�[�h�ƃX�e�b�v����
+    //レバーの制御
     void DefenseAndStepControl(float x, float z)
     {
         if (Mathf.Abs(x) >= 0.8f || Mathf.Abs(z) >= 0.8f)
         {
             if (Mathf.Abs(x) > Mathf.Abs(z))
             {
-                //�E����
+                //レバー右の場合
                 if (x > 0)
                 {
                     if (lastlever_name == "null" && isLeverRight && leverRightTime < 0.2f && !isStep)
@@ -441,7 +442,7 @@ public class KMF_Control : MonoBehaviour
                     isLeverBack = false;
                     isLeverLeft = false;
                 }
-                //������
+                //レバー左の場合
                 else if (x < 0)
                 {
                     if (lastlever_name == "null" && isLeverLeft && leverLeftTime < 0.2f && !isStep)
@@ -472,7 +473,7 @@ public class KMF_Control : MonoBehaviour
             }
             else
             {
-                //�O����
+                //レバー前の場合
                 if (z > 0)
                 {
                     if (isLeverBack && !isUnderAttack)
@@ -534,7 +535,7 @@ public class KMF_Control : MonoBehaviour
                     isLeverLeft = false;
                     isLeverRight = false;
                 }
-                //������
+                //レバー下の場合
                 else if (z < 0)
                 {
                     if(lastlever_name == "null" && isLeverBack && leverBackTime < 0.2f && !isStep)
@@ -569,7 +570,7 @@ public class KMF_Control : MonoBehaviour
             defenseLeverTime = 2f;
         }
 
-        //�X�e�b�v��t����
+        //ステップ受付時間
         if (isLeverFront || lastlever_name == "front")
         {
             leverFrontTime += Time.deltaTime;
@@ -603,7 +604,7 @@ public class KMF_Control : MonoBehaviour
             }
         }
 
-        //�K�[�h��
+        //ガード構え中の制御
         if (isDefense)
         {
             anim.SetBool("Defense", true);
@@ -613,13 +614,13 @@ public class KMF_Control : MonoBehaviour
                 defenseTime += Time.deltaTime;
             }
 
-            //�K�[�h�I��
+            //ガード終了
             if (defenseTime >= 0.5f)
             {
                 DefenseFinish();
             }
 
-            //�u�[�X�g����
+            //ブースト消費
             boostConsumedTime += Time.deltaTime;
             if(boostConsumedTime > 0.01f)
             {
@@ -628,9 +629,9 @@ public class KMF_Control : MonoBehaviour
             }
         }
 
+        //ガード成功中の処理
         if (isDefending)
         {
-            //����
             isStiffness = false;
             defendingTime += Time.deltaTime;
             if(defendingTime <= 0.2f)
@@ -648,7 +649,7 @@ public class KMF_Control : MonoBehaviour
             }
         }
 
-        //�X�e�b�v����
+        //ステップ処理
         if (isStep)
         {
             if (isSlide)
@@ -702,6 +703,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //ガード終了処理
     void DefenseFinish()
     {
         isDefense = false;
@@ -719,7 +721,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
-    //�X�e�b�v�J�n
+    //ステップ開始時の処理
     void StepStart()
     {
         float KmfLookingAtCamera_rotation = Mathf.Abs(Mathf.Repeat(transform.localEulerAngles.y, 360))
@@ -789,6 +791,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //ステップ中のアニメーション決め
     void StepAnimationSelect(string stepfront, string stepback, string stepright, string stepleft)
     {
 
@@ -810,7 +813,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
-    //�X�e�b�v�I��
+    //ステップ終了処理
     void StepFinish()
     {
         isInductionOff = false;
@@ -832,12 +835,13 @@ public class KMF_Control : MonoBehaviour
         anim.SetBool("Step_Left", false);
     }
 
+    //機体の向き制御
     void KMF_Rotation()
     {
         if (isLeverInsert)
         {
-            Vector3 diff = transform.position - new Vector3(latestPos.x, transform.position.y, latestPos.z);   //�O�񂩂�ǂ��ɐi�񂾂����x�N�g���Ŏ擾
-            latestPos = transform.position;  //�O���Position�̍X�V
+            Vector3 diff = transform.position - new Vector3(latestPos.x, transform.position.y, latestPos.z);
+            latestPos = transform.position;
             if (diff != Vector3.zero)
             {
                 float turning_angle = 0.1f;
@@ -855,7 +859,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
-    //�W�����v���u�[�X�g�J�n���̕����]��
+    //機体の急な向きの更新時に使用
     void KMF_RapidRotation()
     {
         if (isLeverInsert)
@@ -906,6 +910,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //レバー方向を取得
     Vector2 SnapAngle(Vector2 vector, float angleSize)
     {
         var angle = Mathf.Atan2(vector.y, vector.x);
@@ -918,16 +923,16 @@ public class KMF_Control : MonoBehaviour
             Mathf.Sin(snappedAngle) * magnitude);
     }
 
+    //ジャンプボタン処理
     void JumpKeyControls()
     {
         if (!isIncapableAction)
         {
-            //�u�[�X�g��
             if (isBoost)
             {
                 Boosting();
             }
-            //�W�����v
+            //ホバー機体の上昇終了処理
             if (!isJump) { }
             else if (!isTypeGroundRunning && !isReplacement)
             {
@@ -945,12 +950,12 @@ public class KMF_Control : MonoBehaviour
             }
         }
 
-        //�W�����v����
+        //ブースト処理
         if (isJump && !isBoost)
         {
             if (!isStiffness || isStep)
             {
-                //�W�����v�J�n����1�x�������s
+                //ブースト開始1回のみ実行
                 if (isJumpMove)
                 {
                     if (!isStep)
@@ -965,7 +970,7 @@ public class KMF_Control : MonoBehaviour
                     isJumpMove = false;
                 }
 
-                //�n���p
+                //地走機体の場合
                 if (isTypeGroundRunning)
                 {
                     jumpRugTime += Time.deltaTime;
@@ -980,7 +985,7 @@ public class KMF_Control : MonoBehaviour
                         isJump = false;
                     }
                 }
-                //�z�o�[�p
+                //ホバー機体の場合
                 else
                 {
                     jumpRugTime += Time.deltaTime;
@@ -1014,7 +1019,7 @@ public class KMF_Control : MonoBehaviour
             anim.SetBool("Jump", false);
         }
 
-        //�u�[�X�g�I��
+        //ブースト終了
         if ((!isLeverInsert && !Input.GetButton("Boost")) || isIncapableAction)
         {
             if (isBoost)
@@ -1028,7 +1033,7 @@ public class KMF_Control : MonoBehaviour
             }
         }
 
-        //�Y�T����
+        //ズサ中の処理
         if (isSlide)
         {
             anim.SetBool("Boost_Landing_Finish", true);
@@ -1041,7 +1046,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
-    //�W�����v�J�n���̐���
+    //ジャンプ開始の処理
     void JumpStart()
     {
         if (!isLanding)
@@ -1054,7 +1059,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
-    //�W�����v���̐���
+    //ジャンプ中の処理
     void Jumping()
     {
         if (!isLanding)
@@ -1074,6 +1079,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //ブースト中の処理
     void Boosting()
     {
         if (!isTypeGroundRunning)
@@ -1103,7 +1109,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
-    //�u�[�X�g�I��
+    //ブースト終了の処理
     void BoostFinish()
     {
         isBoost = false;
@@ -1123,7 +1129,7 @@ public class KMF_Control : MonoBehaviour
         anim.SetBool("Boost_Landing", false);
     }
 
-    //�Y�T�I��
+    //ズサ終了の処理
     void SlideFinish()
     {
         anim.SetBool("Boost_Landing_Finish", false);
@@ -1133,7 +1139,7 @@ public class KMF_Control : MonoBehaviour
         isUnderAttack = false;
     }
 
-    //���n����
+    //着地硬直処理
     void LandingTime()
     {
         if (isLanding && (!isUnderAttack || lastmove_name == "mainshooting"))
@@ -1151,6 +1157,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //上半身のみ相手の方向へ向く処理
     void Rig_Setting(string rig_name, GameObject _LockOnEnemy)
     {
         var sourceobject = gameObject.transform.Find(rig_name).gameObject.transform.GetComponent<MultiAimConstraint>().data.sourceObjects;
@@ -1160,10 +1167,10 @@ public class KMF_Control : MonoBehaviour
 
     ////////////////////////////////////////////////////////
 
-    //�ˌ��{�^������
+    //メイン射撃ボタンの処理
     void ShootingKeyControls()
     {
-        //���C���ˌ���
+        //メイン射撃開始処理
         if (isMainShooting)
         {
             mainShootingTime += Time.deltaTime;
@@ -1201,7 +1208,7 @@ public class KMF_Control : MonoBehaviour
             }
         }
 
-        //�����[�h
+        //メイン射撃のリロード処理
         if (mainshooting_maxnumber > mainshooting_number)
         {
             mainShootingCurrentReloadTime += Time.deltaTime;
@@ -1213,6 +1220,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //メイン射撃終了処理
     void MainShootingFinish()
     {
         isMainShooting = false;
@@ -1221,9 +1229,10 @@ public class KMF_Control : MonoBehaviour
         gameObject.transform.Find("Lancelot/Rig 1").GetComponent<Rig>().weight = 0;
     }
 
-    //�T�u�ˌ�����
+    //サブ射撃ボタンの処理
     void SubShootingControls()
     {
+        //サブ射撃の開始処理
         if (isSubShooting)
         {
             subShootingTime += Time.deltaTime;
@@ -1274,7 +1283,7 @@ public class KMF_Control : MonoBehaviour
             }
         }
 
-        //�����[�h
+        //サブ射撃のリロード処理
         if (subshooting_maxnumber > subshooting_number)
         {
             subShootingCurrentReloadTime += Time.deltaTime;
@@ -1286,6 +1295,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //サブ射撃終了処理
     void SubShootingFinish()
     {
         anim.SetBool("SubShooting_Start", false);
@@ -1299,9 +1309,10 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
-    //����ˌ��{�^������
+    //特殊射撃ボタン制御
     void SpecialShootingControls()
     {
+        //特殊射撃開始処理
         if (!isIncapableAction
             && (!isUnderAttack || lastmove_name == "mainshooting" || lastmove_name == "specialattack"))
         {
@@ -1316,7 +1327,7 @@ public class KMF_Control : MonoBehaviour
             }
         }
 
-        //����ˌ���
+        //特殊射撃中
         if (isSpecialShooting)
         {
             specialShootingTime += Time.deltaTime;
@@ -1348,7 +1359,7 @@ public class KMF_Control : MonoBehaviour
             }
         }
 
-        //�����[�h
+        //特殊射撃リロード処理
         if (specialshooting_number == 0)
         {
             specialShootingCurrentReloadTime += Time.deltaTime;
@@ -1360,6 +1371,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //特殊射撃終了処理
     void SpecialShootingFinish()
     {
         anim.SetBool("SpecialShooting", false);
@@ -1371,12 +1383,12 @@ public class KMF_Control : MonoBehaviour
         gameObject.transform.eulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
     }
 
-    //�i���{�^������
+    //格闘ボタンの制御
     void AttackControls()
     {
         Vector3 attack_direction;
 
-        //�i������
+        //格闘開始処理
         if (isAttack)
         {
             attackTime += Time.deltaTime;
@@ -1389,7 +1401,7 @@ public class KMF_Control : MonoBehaviour
                         gameObject.transform.LookAt(LockOnEnemy.transform);
                     }
                     attack_direction = gameObject.transform.forward * 1;
-                    attack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
+                    attack_direction.Normalize();
                     attack_moving = attack_direction * BOOST_SPEED * 1f;
                     rb.velocity = new Vector3(attack_moving.x, attack_moving.y, attack_moving.z);
                 }
@@ -1406,7 +1418,7 @@ public class KMF_Control : MonoBehaviour
             else
             {
                 attack_direction = gameObject.transform.forward * 1;
-                attack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
+                attack_direction.Normalize();
                 attack_moving = attack_direction * 10f;
                 rb.velocity = new Vector3(attack_moving.x, attack_moving.y, attack_moving.z);
             }
@@ -1417,7 +1429,7 @@ public class KMF_Control : MonoBehaviour
             }
         }
 
-        //�T�u�ˌ��i���h������
+        //サブ格闘派生開始
         if (isSubShootingFightingVariants)
         {
             subShootingFightingVariantsTime += Time.deltaTime;
@@ -1446,6 +1458,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //格闘開始時の処理
     public void StartAttack()
     {
         if (isAttack)
@@ -1465,7 +1478,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
-    //�i���I��
+    //格闘終了処理
     void AttackFinish()
     {
         anim.SetBool("Attack_Induction", false);
@@ -1489,6 +1502,7 @@ public class KMF_Control : MonoBehaviour
         gameObject.transform.eulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
     }
 
+    //サブ格闘派生終了処理
     void SubShootingFightingVariantsFinish()
     {
         Varis_Normal.SetActive(true);
@@ -1502,7 +1516,7 @@ public class KMF_Control : MonoBehaviour
         Leg_R.transform.GetComponent<BoxCollider>().enabled = false;
     }
 
-    //����i���{�^������
+    //特殊格闘ボタンの処理
     void SpecialAttackControls()
     {
         if (isSpecialAttack)
@@ -1522,7 +1536,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
-    //����i���I��
+    //特殊格闘終了処理
     void SpecialAttackFinish()
     {
         anim.SetBool("SpecialAttack", false);
@@ -1531,7 +1545,7 @@ public class KMF_Control : MonoBehaviour
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
 
-    //�i��CS
+    //格闘CS処理
     void FightingChargeControl()
     {
         if (fightingChargeCurrentReloadTime < fightingChargeReloadTime && !isFightingChargeInput && !isFloatUnit)
@@ -1619,6 +1633,7 @@ public class KMF_Control : MonoBehaviour
 
     ////////////////////////////////////////
 
+    //チャージゲージの範囲制限
     float ChargeControl(float currenttime, float maxtime)
     {
         if(currenttime > maxtime)
@@ -1635,6 +1650,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //換装中の処理
     void ReplacementMove()
     {
         if (isReplacement)
@@ -1647,6 +1663,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //換装終了処理
     void ReplacementFinish()
     {
         replacementTime = 0;
@@ -1656,19 +1673,19 @@ public class KMF_Control : MonoBehaviour
         anim.SetBool("Replacement", false);
     }
 
-    //�d�̓I�t
+    //重力を無くす
     void GravityOff()
     {
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
     }
 
-    //���~��
+    //硬直
     void Rigidity()
     {
         rb.velocity = new Vector3(0, 0, 0);
     }
 
-    //��낯���_�E������
+    //よろけとダウン時の処理
     void Stagger_Control()
     {
         if (isStagger || isDown)
@@ -1731,6 +1748,7 @@ public class KMF_Control : MonoBehaviour
 
     ////////////////////////////////////////////////////////////
     
+    //ジャンプボタンが押された場合
     public void OnJump(InputAction.CallbackContext context)
     {
         if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
@@ -1742,7 +1760,7 @@ public class KMF_Control : MonoBehaviour
                     if (!isIncapableAction)
                     {
                         isJumpKeyPressing = true;
-                        //�W�����v
+                        //ジャンプ開始
                         if (!isJump)
                         {
                             BoostFinish();
@@ -1753,7 +1771,7 @@ public class KMF_Control : MonoBehaviour
                             isJumpMove = true;
                             isStepJump = false;
                         }
-                        //�u�[�X�g
+                        //ブースト開始
                         else if (isJump)
                         {
                             boostButtonTime += Time.deltaTime;
@@ -1805,6 +1823,8 @@ public class KMF_Control : MonoBehaviour
             }
         }
     }
+
+    //ジャンプボタンが離した場合
     public void OffJump(InputAction.CallbackContext context)
     {
         if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
@@ -1819,6 +1839,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //メイン射撃ボタンが押された場合
     public void OnMainShoot(InputAction.CallbackContext context)
     {
         if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
@@ -1850,7 +1871,7 @@ public class KMF_Control : MonoBehaviour
                                     SubShootingFinish();
                                 }
                                 lastmove_name = "mainshooting";
-                                //�U���������
+                                //振り向き撃ち
                                 if (Mathf.Abs(Mathf.Abs(Mathf.Repeat(transform.localEulerAngles.y + 180, 360) - 180) - Mathf.Abs(Mathf.Repeat(MainCamera.transform.localEulerAngles.y + 180, 360) - 180)) >= 100f)
                                 {
                                     if (LockOnEnemy != null)
@@ -1866,6 +1887,8 @@ public class KMF_Control : MonoBehaviour
             }
         }
     }
+
+    //サブ射撃ボタンが押された場合
     public void OnSubShoot(InputAction.CallbackContext context)
     {
         if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
@@ -1905,6 +1928,8 @@ public class KMF_Control : MonoBehaviour
             }
         }
     }
+
+    //特殊射撃ボタンが押された場合
     public void OnSpecialShoot(InputAction.CallbackContext context)
     {
         if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
@@ -1950,6 +1975,8 @@ public class KMF_Control : MonoBehaviour
             }
         }
     }
+
+    //格闘ボタンが押された場合
     public void OnFight(InputAction.CallbackContext context)
     {
         if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
@@ -2020,7 +2047,7 @@ public class KMF_Control : MonoBehaviour
                                 MVS_L.transform.Find("MVS").GetComponent<Beam_Control>().downValue = 6;
                             }
 
-                            //�T�u�ˌ��i���h��
+                            //サブ格闘派生開始処理
                             if (lastmove_name == "subshooting" && isSubShooting && !isSubShootingFightingVariants)
                             {
                                 SubShootingFinish();
@@ -2054,6 +2081,8 @@ public class KMF_Control : MonoBehaviour
             }
         }
     }
+
+    //特殊格闘ボタンが押された場合
     public void OnSpecialFight(InputAction.CallbackContext context)
     {
         if (pv != null || SceneManager.GetActiveScene().name == "TrainingScene")
@@ -2086,7 +2115,7 @@ public class KMF_Control : MonoBehaviour
                             }
                             lastmove_name = "specialattack";
                             specialattack_direction = gameObject.transform.forward * 1;
-                            specialattack_direction.Normalize();//�΂߂̋����������Ȃ�̂�h���܂�
+                            specialattack_direction.Normalize();
                             specialattack_moving = specialattack_direction * BOOST_SPEED * 1.2f;
                         }
                     }
@@ -2097,6 +2126,7 @@ public class KMF_Control : MonoBehaviour
 
     ////////////////////////////////////////////////////////////
 
+    //金属エフェクトと砂煙エフェクトのアクティブ設定
     [PunRPC]
     void RpcEffControl()
     {
@@ -2112,6 +2142,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //金属エフェクトの制御
     [PunRPC]
     void RpcSparkControl(bool start_flag)
     {
@@ -2127,12 +2158,14 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //ステップラインの方向設定
     [PunRPC]
     void StepLineDirection(Vector3 vector3)
     {
         Eff_StepLine.transform.localEulerAngles = vector3;
     }
 
+    //砂煙エフェクト終了
     [PunRPC]
     void RpcEffControl_NotBoostFlag()
     {
@@ -2140,6 +2173,7 @@ public class KMF_Control : MonoBehaviour
         EffDust_L.GetComponent<ParticleSystem>().Stop();
     }
 
+    //虹ステップ色にする
     [PunRPC]
     void RpcFightGradientChange_StepLine()
     {
@@ -2152,6 +2186,7 @@ public class KMF_Control : MonoBehaviour
         col.color = colorkey;
     }
 
+    //通常ステップ色にする
     [PunRPC]
     void RpcNormalGradientChange_StepLine()
     {
@@ -2164,12 +2199,14 @@ public class KMF_Control : MonoBehaviour
         col.color = colorkey;
     }
 
+    //ステップエフェクトの表示設定
     [PunRPC]
     void EffSetActive(bool display_flag)
     {
         Eff_StepLine.SetActive(display_flag);
     }
 
+    //砂煙エフェクト開始
     [PunRPC]
     void RpcEffDustPlay_Control()
     {
@@ -2177,6 +2214,7 @@ public class KMF_Control : MonoBehaviour
         EffDust_L.GetComponent<ParticleSystem>().Play();
     }
 
+    //砂煙エフェクト終了
     [PunRPC]
     void RpcEffDustStop_Control()
     {
@@ -2184,18 +2222,21 @@ public class KMF_Control : MonoBehaviour
         EffDust_L.GetComponent<ParticleSystem>().Stop();
     }
 
+    //盾出現
     [PunRPC]
     void BlazeLuminousExpand()
     {
         BlazeLuminous.SetActive(true);
     }
 
+    //盾収納
     [PunRPC]
     void BlazeLuminousClose()
     {
         BlazeLuminous.SetActive(false);
     }
 
+    //耐久値同期
     [PunRPC]
     void DurabilitySync(int _durable_value)
     {
@@ -2204,6 +2245,7 @@ public class KMF_Control : MonoBehaviour
 
     ////////////////////////////////////////////////////////////
 
+    //コライダー当たった場合
     private void OnCollisionEnter(Collision other)
     {
         if (pv != null)
@@ -2250,6 +2292,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //コライダー当たっている場合
     private void OnCollisionStay(Collision other)
     {
 
@@ -2268,6 +2311,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //コライダー離れた場合
     private void OnCollisionExit(Collision other)
     {
         if (pv != null)
@@ -2283,6 +2327,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //トリガー当たった場合
     private void OnTriggerEnter(Collider other)
     {
         if (pv != null)
@@ -2294,6 +2339,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //トリガー当たっている場合
     private void OnTriggerStay(Collider other)
     {
         if (pv != null)
@@ -2308,6 +2354,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //トリガー離れた場合
     private void OnTriggerExit(Collider other)
     {
         if (pv != null)
@@ -2328,6 +2375,7 @@ public class KMF_Control : MonoBehaviour
         }
     }
 
+    //被弾処理
     void Hit_Control(Collider other)
     {
         if (other.gameObject.GetComponent<Beam_Control>() != null)
@@ -2339,7 +2387,7 @@ public class KMF_Control : MonoBehaviour
                     if (other.gameObject.CompareTag("Bullet") || other.gameObject.CompareTag("Untagged"))
                     {
                         other_forward = other.transform.position;
-                        //�K�[�h����
+                        //ガード成功の場合
                         if (isDefense && Vector3.Angle(transform.forward, other.gameObject.transform.forward) >= 90)
                         {
                             isDefending = true;

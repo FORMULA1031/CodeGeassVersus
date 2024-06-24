@@ -9936,9 +9936,9 @@ GameObject:
   - component: {fileID: 2462477055392973559}
   - component: {fileID: 445303776011217912}
   - component: {fileID: -3834046208635594688}
+  - component: {fileID: -7321859090794346915}
   - component: {fileID: -7972979606065035022}
   - component: {fileID: -4331763242222002619}
-  - component: {fileID: 3200299029706548733}
   m_Layer: 0
   m_Name: Lancelot_Player
   m_TagString: Player
@@ -10012,13 +10012,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdc0a4cabd119084a89a61850a27605f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boost_amount: 0
   mainShootingCurrentReloadTime: 0
   mainShootingReloadTime: 3
   subShootingCurrentReloadTime: 0
-  subShootingReloadTime: 2
+  subShootingReloadTime: 4
   specialShootingCurrentReloadTime: 0
-  specialShootingReloadTime: 5
+  specialShootingReloadTime: 3
   fightingChargeTime: 0
   fightingChargeMaxTime: 3
   fightingChargeCurrentReloadTime: 0
@@ -10030,6 +10029,7 @@ MonoBehaviour:
   isInductionOff: 0
   isDown: 0
   isTypeGroundRunning: 1
+  boost_amount: 0
   durable_value: 300
   durable_maxvalue: 300
   mainshooting_number: 8
@@ -10267,11 +10267,27 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: -7321859090794346915}
   - {fileID: -7972979606065035022}
-  - {fileID: 3200299029706548733}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &-7321859090794346915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2462477055392973516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!114 &-7972979606065035022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10386,7 +10402,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2462477055392973516}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
@@ -10405,7 +10421,19 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: d9c17c3c-c73f-48d0-b173-dee9560ea9e1
     m_ActionName: Player/Move[/DualShock4GamepadHID/leftStick,/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
@@ -10573,22 +10601,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &3200299029706548733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2462477055392973516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!1 &2462477055446505986
 GameObject:
   m_ObjectHideFlags: 0
@@ -11398,8 +11410,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 100
-  correctionFactor: 0.2
-  downValue: 6
+  correctionFactor: 0
+  downValue: 0
   speed: 0
   induction_x: 0
   induction_y: 0
@@ -12152,8 +12164,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 70
-  correctionFactor: 0.15
-  downValue: 0.3
+  correctionFactor: 0
+  downValue: 0
   speed: 0
   induction_x: 0
   induction_y: 0
@@ -12484,8 +12496,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 65
-  correctionFactor: 0.2
-  downValue: 1.7
+  correctionFactor: 0
+  downValue: 0
   speed: 0
   induction_x: 0
   induction_y: 0

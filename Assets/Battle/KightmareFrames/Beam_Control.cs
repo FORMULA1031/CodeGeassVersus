@@ -20,7 +20,7 @@ public class Beam_Control : MonoBehaviour
     public GameObject OwnMachine;
     GameObject LockOnEnemy;
     public bool changedirection_flag;
-    public bool fighting_flag;  //���̃I�u�W�F�N�g���i����
+    public bool fighting_flag;
     bool direction_flag = false;
     bool isInduction = true;
     Vector3 direction;

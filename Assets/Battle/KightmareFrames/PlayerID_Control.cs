@@ -55,7 +55,6 @@ public class PlayerID_Control : MonoBehaviour
                                 LockOnEnemy = players[num];
                                 if (RockOnMaker_Control != null)
                                 {
-                                    Debug.Log(LockOnEnemy);
                                     RockOnMaker_Control.target = LockOnEnemy;
                                 }
                             }
