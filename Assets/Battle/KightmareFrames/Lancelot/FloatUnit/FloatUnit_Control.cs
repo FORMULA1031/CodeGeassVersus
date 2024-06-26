@@ -38,10 +38,12 @@ public class FloatUnit_Control : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //自機のみ実行
         if (pv != null)
         {
             if (pv.IsMine || SceneManager.GetActiveScene().name == "TrainingScene")
             {
+                //ブーストアニメーションにする
                 if (KMF_Control.anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|Boost_Sky") ||
                     KMF_Control.anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|Boost_Landing") ||
                     KMF_Control.anim.GetCurrentAnimatorStateInfo(0).IsName("Lancelot|MEBoost") ||
@@ -62,6 +64,7 @@ public class FloatUnit_Control : MonoBehaviour
                         isJump = true;
                     }
                 }
+                //スタンバイアニメーションにする
                 else
                 {
                     Jet_R[0].Stop();

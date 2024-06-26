@@ -18,8 +18,10 @@ public class AircraftSelection_Control : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //決定ボタンを押した場合
         if (Input.GetButtonDown("SubShooting"))
         {
+            //ボタンは一度しか押せない
             if (!selectkmf_flag)
             {
                 FadePanel.transform.GetComponent<FadeManager>().Out = true;

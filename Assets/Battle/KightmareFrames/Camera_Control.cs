@@ -20,12 +20,15 @@ public class Camera_Control : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //ロックオン対象を探す
         if (Enemys[0] == null)
         {
+            //オフライン
             if (EventSystem.GetComponent<BattleGame_Control>() != null)
             {
                 Enemys[0] = GameObject.Find("Lancelot_Enemy(Clone)");
             }
+            //オンライン
             else if (EventSystem.GetComponent<OneOnOne_Control>() != null)
             {
                 Enemys[0] = Player_KMF.GetComponent<PlayerID_Control>().LockOnEnemy;
@@ -43,6 +46,7 @@ public class Camera_Control : MonoBehaviour
             }
         }
 
+        //自機が存在しロックオン対象が存在する場合
         if (Enemys[0] != null && Player_KMF != null)
         {
             last_position = transform.position - Player_KMF.transform.position;
@@ -67,6 +71,7 @@ public class Camera_Control : MonoBehaviour
             // 現在の回転情報と、ターゲット方向の回転情報を補完する
             transform.rotation = Quaternion.Slerp(this.transform.rotation, rotation, 1.0f);
         }
+        //自機が存在する場合
         else if(Player_KMF != null)
         {
             transform.position = Player_KMF.transform.position + last_position;

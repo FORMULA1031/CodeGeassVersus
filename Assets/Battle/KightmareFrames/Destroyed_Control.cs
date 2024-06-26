@@ -20,11 +20,13 @@ public class Destroyed_Control : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //プレイヤー用の機体取得
         if(KMF_Control == null)
         {
             KMF_Control = transform.GetComponent<KMF_Control>();
         }
 
+        //NPC用の機体取得
         if(Cpu_Control != null)
         {
             if(Cpu_Control.durable_value <= 0)
@@ -32,6 +34,7 @@ public class Destroyed_Control : MonoBehaviour
                 explosion_flag = true;
             }
         }
+        //機体の耐久値が0になった場合
         if (KMF_Control != null)
         {
             if (KMF_Control.durable_value <= 0)
@@ -45,22 +48,28 @@ public class Destroyed_Control : MonoBehaviour
         }
     }
 
+    //大破制御
     public void DestroyedControl()
     {
         time += Time.deltaTime;
+        //一定時間大破する
         if(time >= 0.5f && !destroyed_flag)
         {
+            //自機のみ実行する
             if (pv != null)
             {
+                //オンライン
                 if (pv.IsMine)
                 {
                     pv.RPC(nameof(RpcDestroying), RpcTarget.AllBufferedViaServer);
                 }
+                //オンライン
                 else if (SceneManager.GetActiveScene().name == "TrainingScene")
                 {
                     RpcDestroying();
                 }
             }
+            //オンライン
             else if (SceneManager.GetActiveScene().name == "TrainingScene")
             {
                 RpcDestroying();
@@ -69,6 +78,7 @@ public class Destroyed_Control : MonoBehaviour
         }
     }
 
+    //大破同期
     [PunRPC]
     void RpcDestroying()
     {

@@ -116,6 +116,7 @@ public class StartDisplay_Control : MonoBehaviour
         }
     }
 
+    //スタートボタン告知のテキスト制御
     void TextControl()
     {
         time += Time.deltaTime;
@@ -139,6 +140,7 @@ public class StartDisplay_Control : MonoBehaviour
         }
     }
 
+    //パネル表示
     void PanelOpen()
     {
         if (panel_open && panelopen_time <= 0.25f)
@@ -160,6 +162,7 @@ public class StartDisplay_Control : MonoBehaviour
         }
     }
 
+    //メニュー選択
     void ChangeSelectMenu()
     {
         if (panel_open && !selected_host && !selected_gest && !selected_setting)
@@ -220,6 +223,7 @@ public class StartDisplay_Control : MonoBehaviour
         }
     }
 
+    //設定画面終了
     public void CloseKeyConfigPanel()
     {
         KeyConfigPanel.transform.localScale = new Vector3(KeyConfigPanel.transform.localScale.x, 0f, KeyConfigPanel.transform.localScale.z);

@@ -20,6 +20,7 @@ public class Setting_Control : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //設定メニューに入った場合
         if (StartDisplay_Control.selected_setting)
         {
             SelectingAction();
@@ -31,11 +32,13 @@ public class Setting_Control : MonoBehaviour
     {
         for(int action_number = 0; action_number < 9; action_number++)
         {
+            //選択中ボタンの色
             if(action_number == currentnumber)
             {
 
                 ActionPanels[action_number].GetComponent<Image>().color = new Color(1f, 0.78f, 0f);
             }
+            //選択中ではない場合のボタンの色
             else
             {
                 ActionPanels[action_number].GetComponent<Image>().color = new Color(0.2f, 0.2f, 0.2f);
@@ -43,18 +46,22 @@ public class Setting_Control : MonoBehaviour
         }
     }
 
+    //選択するボタン決め
     void SelectingAction()
     {
         float x = Input.GetAxis("Move_X");
         float y = Input.GetAxis("Move_Y") * -1;
 
+        //レバーN
         if(x < 0.8f && x > -0.8f && y < 0.8f && y >-0.8f)
         {
             moved_flag = false;
         }
 
+        //入力権限がある場合
         if (!moved_flag)
         {
+            //右
             if (x >= 0.8f)
             {
                 if (currentnumber <= 3)
@@ -63,6 +70,7 @@ public class Setting_Control : MonoBehaviour
                 }
                 moved_flag = true;
             }
+            //左
             else if (x <= -0.8f)
             {
                 if (currentnumber >= 4 && currentnumber != 8)
@@ -71,6 +79,7 @@ public class Setting_Control : MonoBehaviour
                 }
                 moved_flag = true;
             }
+            //上
             if (y >= 0.8f)
             {
                 if (currentnumber != 0 && currentnumber != 4)
@@ -79,6 +88,7 @@ public class Setting_Control : MonoBehaviour
                 }
                 moved_flag = true;
             }
+            //下
             else if (y <= -0.8f)
             {
                 if (currentnumber != 3 && currentnumber != 8)
@@ -94,14 +104,17 @@ public class Setting_Control : MonoBehaviour
         }
     }
 
+    //決定ボタンを押した場合
     void DicisionAction()
     {
         if (Input.GetButtonDown("SubShooting"))
         {
+            //勝手にボタン決めをしない
             if (close_flag)
             {
                 if (ActionPanels[currentnumber].GetComponent<RebindUI>() != null)
                 {
+                    //技に対するボタン決め開始
                     if (!ActionPanels[currentnumber].GetComponent<RebindUI>().rebinding_flag)
                     {
                         ActionPanels[currentnumber].GetComponent<RebindUI>().StartRebinding();
@@ -114,6 +127,7 @@ public class Setting_Control : MonoBehaviour
                 }
             }
         }
+        //ボタン決めできるようにする
         else if (Input.GetButtonUp("SubShooting"))
         {
             close_flag = true;
