@@ -26,6 +26,7 @@ public class OneOnOne_Control : MonoBehaviour
     void Start()
     {
         IdentifyThePlayer();
+        //プレイヤー用機体が存在する場合
         if (Player.GetComponent<KMF_Control>() != null)
         {
             Player.GetComponent<KMF_Control>().enabled = false;
@@ -51,6 +52,8 @@ public class OneOnOne_Control : MonoBehaviour
             }
         }
     }
+
+    //機体の再出撃
     void IdentifyThePlayer()
     {
         mine_number = PhotonNetwork.LocalPlayer.ActorNumber;
@@ -63,17 +66,20 @@ public class OneOnOne_Control : MonoBehaviour
         DurableValueUI.GetComponent<DurableValueUi_Control>().Player = Player;
     }
 
+    //戦力ゲージの更新とゲーム終了の判定
     void WarPotentialGaugeControl(int player_number)
     {
         if (WarPotentialGauge[player_number] != null)
         {
             WarPotentialGauge[player_number].GetComponent<Image>().fillAmount = (float)team[player_number] / 6000;
 
+            //戦力ゲージが無くなった場合
             if (WarPotentialGauge[player_number].GetComponent<Image>().fillAmount <= 0)
             {
                 if (FinishPanel != null)
                 {
                     FinishPanel.GetComponent<FinishPanel_Control>().finish_flag = true;
+                    //負けフラグ付与
                     if (mine_number - 1 == player_number)
                     {
                         FinishPanel.GetComponent<FinishPanel_Control>().lose_flag = true;
@@ -83,6 +89,7 @@ public class OneOnOne_Control : MonoBehaviour
         }
     }
 
+    //撃破されたときの処理
     public void ReLaunch(int player_number)
     {
         if (player_number != -1)
@@ -97,6 +104,7 @@ public class OneOnOne_Control : MonoBehaviour
                     pv.RPC(nameof(Team2CostDecreased), RpcTarget.AllBufferedViaServer);
                     break;
             }
+            //再出撃申請
             if (WarPotentialGauge[player_number] != null)
             {
                 if (WarPotentialGauge[player_number].GetComponent<Image>().fillAmount > 0)
@@ -107,12 +115,14 @@ public class OneOnOne_Control : MonoBehaviour
         }
     }
 
+    //チーム1のコスト減少
     [PunRPC]
     void Team1CostDecreased()
     {
         team[0] -= 2000;
     }
 
+    //チーム2のコスト減少
     [PunRPC]
     void Team2CostDecreased()
     {

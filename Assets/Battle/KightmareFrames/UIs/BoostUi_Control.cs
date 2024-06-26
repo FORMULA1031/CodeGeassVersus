@@ -11,11 +11,13 @@ public class BoostUi_Control : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //自機が存在する場合
         if (Player != null)
         {
             boost_amount = Player.GetComponent<KMF_Control>().boost_amount / 100;
             gameObject.transform.Find("FillGauge").GetComponent<Image>().fillAmount = boost_amount;
         }
+        //オーバーヒートの場合
         if(boost_amount <= 0)
         {
             gameObject.transform.Find("BackGround_Outer").GetComponent<Image>().color = new Color(255, 0, 0);

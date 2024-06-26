@@ -36,10 +36,12 @@ public class CountDown_Control : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //カウントダウン開始
         if (countisDown)
         {
             countdown_time += Time.deltaTime;
             countdown_scale = countdown_time;
+            //カウントダウン用のUIの大きさ制限
             if (countdown_scale > 1)
             {
                 countdown_scale = 1;
@@ -47,25 +49,30 @@ public class CountDown_Control : MonoBehaviour
             StandeyPanel.transform.localScale = new Vector3(1, countdown_scale, 1);
             CountDownText.GetComponent<Text>().text = "<" + (4 - (int)countdown_time) + ">";
 
+            //スタンバイUIの制御
             if (countdown_time >= 4 && countdown_time < 5)
             {
                 StandeyPanel.transform.localScale = new Vector3(1, 0, 1);
                 StartText.transform.localScale = new Vector3((countdown_time - 4) * 3, (countdown_time - 4) * 3, 1);
             }
+            //カウントダウン終了
             if (countdown_time >= 5)
             {
                 StandeyPanel.transform.localScale = new Vector3(1, 0, 1);
                 StartText.transform.localScale = new Vector3(0, 0, 1);
                 Canvas.SetActive(true);
                 LockOnMarkerCanvas.SetActive(true);
+                //オフライン用の自機の取得
                 if (GameObject.Find("EventSystem").GetComponent<BattleGame_Control>() != null)
                 {
                     Players = GameObject.Find("EventSystem").GetComponent<BattleGame_Control>().Player[0];
                 }
+                //オンライン用の自機の取得
                 else if(GameObject.Find("EventSystem").GetComponent<OneOnOne_Control>() != null)
                 {
                     Players = GameObject.Find("EventSystem").GetComponent<OneOnOne_Control>().Player;
                 }
+                //機体の制御を可能にする
                 if (Players != null)
                 {
                     if (Players.GetComponent<KMF_Control>() != null)

@@ -27,17 +27,20 @@ public class FadeManager : MonoBehaviour
 
     void Update()
     {
+        //フェードイン
         if (In)
         {
             FadeIn();
         }
 
+        //フェードアウト
         if (Out)
         {
             FadeOut();
         }
     }
 
+    //フェードイン
     void FadeIn()
     {
         alfa -= Time.deltaTime;
@@ -47,18 +50,21 @@ public class FadeManager : MonoBehaviour
             In = false;
         }
     }
-
+    
+    //フェードアウト
     void FadeOut()
     {
         fadeImage.enabled = true;
         alfa += Time.deltaTime;
         Alpha();
+        //シーン遷移
         if (alfa >= 1)
         {
             SceneManager.LoadScene(scenename);
         }
     }
 
+    //色の調整
     void Alpha()
     {
         fadeImage.color = new Color(red, green, blue, alfa);

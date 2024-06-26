@@ -18,15 +18,18 @@ public class PlayerID_Control : MonoBehaviour
     void Start()
     {
         EventSystem = GameObject.Find("EventSystem");
+        //プレイヤーの最大人数取得
         if (EventSystem.GetComponent<BattleGame_Control>() != null)
         {
             player_maxnumber = EventSystem.GetComponent<BattleGame_Control>().Selected_KMF.Length;
         }
         pv = GetComponent<PhotonView>();
+        //コントロール権限がある場合
         if (pv != null)
         {
             if (pv.IsMine)
             {
+                //タイマンの場合
                 if (EventSystem.GetComponent<OneOnOne_Control>() != null)
                 {
                     player_maxnumber = 2;
@@ -39,6 +42,7 @@ public class PlayerID_Control : MonoBehaviour
     void Update()
     {
         RockOnMakerSearch();
+        //コントロール権限がある場合
         if (pv != null)
         {
             if (pv.IsMine)
@@ -50,6 +54,7 @@ public class PlayerID_Control : MonoBehaviour
                     {
                         if (players[num].GetComponent<PlayerID_Control>() != null)
                         {
+                            //自機ではない場合ロックオン対象とする
                             if (ID != players[num].GetComponent<PlayerID_Control>().ID)
                             {
                                 LockOnEnemy = players[num];
@@ -62,9 +67,11 @@ public class PlayerID_Control : MonoBehaviour
                     }
                 }
             }
+            //オフライン
             else if (EventSystem.GetComponent<BattleGame_Control>() != null)
             {
                 LockOnEnemy = GameObject.Find("Lancelot_Enemy(Clone)");
+                //ロックオン対象決定
                 if (RockOnMaker_Control != null)
                 {
                     RockOnMaker_Control.target = LockOnEnemy;
@@ -73,11 +80,13 @@ public class PlayerID_Control : MonoBehaviour
         }
     }
 
+    //ロックオンマーカーを探す
     void RockOnMakerSearch()
     {
         if (RockOnMaker == null)
         {
             RockOnMaker = GameObject.Find("LockOnMarkerCanvas/RockOnMarker_UI");
+            //ロックオンマーカーが見つかった場合
             if (RockOnMaker != null)
             {
                 if (RockOnMaker.activeSelf)
@@ -88,12 +97,16 @@ public class PlayerID_Control : MonoBehaviour
         }
     }
 
+    //自オブジェクトが破壊された場合
     private void OnDestroy()
     {
+        //コントロール権限がある場合
         if (pv != null)
         {
+            //オンライン
             if (pv.IsMine)
             {
+                //再出撃申請する
                 if (EventSystem != null && relaunch_flag)
                 {
                     if (EventSystem.GetComponent<OneOnOne_Control>() != null)
@@ -106,6 +119,7 @@ public class PlayerID_Control : MonoBehaviour
         }
         else
         {
+            //オフライン
             if (EventSystem != null && relaunch_flag)
             {
                 if (EventSystem.GetComponent<BattleGame_Control>() != null)

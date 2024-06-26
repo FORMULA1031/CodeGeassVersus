@@ -14,9 +14,4 @@ public class WarPotentialGauge_Control : MonoBehaviour
     {
         BattleGame_Control = GameObject.Find("EventSystem").GetComponent<BattleGame_Control>();
     }
-
-    private void FixedUpdate()
-    {
-        
-    }
 }
