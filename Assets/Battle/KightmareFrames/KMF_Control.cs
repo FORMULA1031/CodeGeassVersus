@@ -14,7 +14,7 @@ public class KMF_Control : MonoBehaviour
     ***********/
     const float WALK_SPEED   = 15;
     const float BOOST_SPEED  = 60;
-    const float JUMP_POWER   = 80;
+    const float JUMP_POWER   = 60;
     const int BOOST_MAX      = 100;
     /*********************
         時間管理用変数
@@ -319,6 +319,7 @@ public class KMF_Control : MonoBehaviour
                 //ズサ、着地硬直ではない場合
                 if (!isLanding && !isSlide)
                 {
+                    KMF_Rotation();
                     //ジャンプを除いた移動する場合
                     if (isLeverInsert && !isDefense && lastmove_name != "jump")
                     {
@@ -327,24 +328,34 @@ public class KMF_Control : MonoBehaviour
                         {
                             Debug.Log("地走移動");
                             rb.velocity = new Vector3(movingvelocity.x, rb.velocity.y, movingvelocity.z);
+
+                            //金属エフェクトの発生(オフライン)
+                            if (SceneManager.GetActiveScene().name == "TrainingScene")
+                            {
+                                RpcSparkControl(true);
+                            }
+                            //金属エフェクトの発生(オンライン)
+                            else
+                            {
+                                pv.RPC(nameof(RpcSparkControl), RpcTarget.AllBufferedViaServer, true);
+                            }
                         }
                         //ホバー機体の場合
                         else
                         {
                             Debug.Log("ホバー移動");
                             rb.velocity = new Vector3(movingvelocity.x, 0, movingvelocity.z);
+                            //金属エフェクトの終了(オフライン)
+                            if (SceneManager.GetActiveScene().name == "TrainingScene" && isBoost)
+                            {
+                                RpcSparkControl(false);
+                            }
+                            //金属エフェクトの終了(オンライン)
+                            else if(isBoost)
+                            {
+                                pv.RPC(nameof(RpcSparkControl), RpcTarget.AllBufferedViaServer, false);
+                            }
                         }
-                        //金属エフェクトの発生(オフライン)
-                        if (SceneManager.GetActiveScene().name == "TrainingScene")
-                        {
-                            RpcSparkControl(true);
-                        }
-                        //金属エフェクトの発生(オンライン)
-                        else
-                        {
-                            pv.RPC(nameof(RpcSparkControl), RpcTarget.AllBufferedViaServer, true);
-                        }
-                        KMF_Rotation();
                     }
                     //一つ前の行動がステップだった場合
                     else if (lastmove_name == "step")
@@ -921,9 +932,12 @@ public class KMF_Control : MonoBehaviour
         Debug.Log("ステップ終了");
         isInductionOff = false;
         isStiffness = false;
-        isStep = false;
+        if (isStep)
+        {
+            lastmove_name = "null";
+            isStep = false;
+        }
         stepTime = 0;
-        lastmove_name = "null";
         //ステップエフェクト終了(オフライン)
         if (SceneManager.GetActiveScene().name == "TrainingScene")
         {
@@ -1118,6 +1132,11 @@ public class KMF_Control : MonoBehaviour
                 //ホバー機体の場合
                 else
                 {
+                    if(lastmove_name == "boost")
+                    {
+                        Boosting();
+                    }
+
                     jumpRugTime += Time.deltaTime;
                     //ジャンプするまでのラグ
                     if (jumpRugTime >= 0.2f && !isRise)
@@ -1135,7 +1154,7 @@ public class KMF_Control : MonoBehaviour
             else
             {
                 //私にも分からん
-                if (isUnderAttack || isStep)
+                /*if (isUnderAttack || isStep)
                 {
                     Debug.Log("クリックして存在意義を教えて！");
                     jumpRugTime += Time.deltaTime;
@@ -1145,7 +1164,7 @@ public class KMF_Control : MonoBehaviour
                 else
                 {
                     isJump = false;
-                }
+                }*/
             }
         }
         else
@@ -1188,7 +1207,7 @@ public class KMF_Control : MonoBehaviour
     void JumpStart()
     {
         //着地硬直でない場合
-        if (!isLanding)
+        if (!isLanding && boost_amount > 0)
         {
             Debug.Log("ジャンプ開始");
             lastmove_name = "jump";
@@ -1203,7 +1222,7 @@ public class KMF_Control : MonoBehaviour
     void Jumping()
     {
         //着地硬直でない場合
-        if (!isLanding)
+        if (!isLanding && boost_amount > 0)
         {
             Debug.Log("ジャンプ中");
             Vector3 jump_direction;
@@ -1213,12 +1232,6 @@ public class KMF_Control : MonoBehaviour
             jump_direction.Normalize();
             jump_moving = jump_direction * JUMP_POWER;
             movingvelocity = rb.velocity;
-            //フワジャンの場合(兄ちゃんが直したいって言ってたやつかも！！！)
-            if (isStepJump)
-            {
-                Debug.Log("フワジャン");
-                movingvelocity /= 2;
-            }
             rb.velocity = new Vector3(movingvelocity.x, jump_moving.y, movingvelocity.z);
         }
     }
@@ -1239,6 +1252,14 @@ public class KMF_Control : MonoBehaviour
             boost_direction = transform.forward;
             boost_direction.Normalize();
             movingvelocity = boost_direction * BOOST_SPEED;
+            if (isTypeGroundRunning)
+            {
+                rb.velocity = new Vector3(movingvelocity.x, rb.velocity.y, movingvelocity.z);
+            }
+            else
+            {
+                rb.velocity = new Vector3(movingvelocity.x, 0, movingvelocity.z);
+            }
         }
         //レバーを入れないブーストダッシュ
         else
@@ -1247,7 +1268,14 @@ public class KMF_Control : MonoBehaviour
             boost_direction = transform.forward;
             boost_direction.Normalize();
             movingvelocity = boost_direction * BOOST_SPEED;
-            rb.velocity = new Vector3(movingvelocity.x, rb.velocity.y, movingvelocity.z);
+            if (isTypeGroundRunning)
+            {
+                rb.velocity = new Vector3(movingvelocity.x, rb.velocity.y, movingvelocity.z);
+            }
+            else
+            {
+                rb.velocity = new Vector3(movingvelocity.x, 0, movingvelocity.z);
+            }
         }
         boostConsumedTime += Time.deltaTime;
         //ブースト消費
@@ -1262,9 +1290,12 @@ public class KMF_Control : MonoBehaviour
     void BoostFinish()
     {
         Debug.Log("ブースト終了");
-        isBoost = false;
+        if (isBoost)
+        {
+            isBoost = false;
+            lastmove_name = "boost";
+        }
         rb.useGravity = true;
-        lastmove_name = "boost";
         Eff_SpeedLine.SetActive(false);
         //砂煙エフェクトの終了(オフライン)
         if (SceneManager.GetActiveScene().name == "TrainingScene")
@@ -2555,7 +2586,7 @@ public class KMF_Control : MonoBehaviour
                     anim.SetBool("Air", false);
                     isJump = false;
                     //ブースト中でない場合
-                    if (!isBoost)
+                    if (!isBoost && !isJump)
                     {
                         isLanding = true;
                         boost_amount = BOOST_MAX;
